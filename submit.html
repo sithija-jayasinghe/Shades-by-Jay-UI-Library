@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Component - Shades By Jay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .submit-container {
+            max-width: 1400px;
+            margin: 100px auto 40px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            height: calc(100vh - 140px);
+        }
+
+        .editor-section {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .preview-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .preview-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            color: var(--text-primary);
+            background: rgba(0,0,0,0.2);
+        }
+
+        .preview-area {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
+            background-size: 20px 20px;
+            padding: 40px;
+            overflow: auto;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .form-input, .form-select {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 12px;
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            transition: 0.3s;
+        }
+
+        .form-select option {
+            background-color: #1f1f23; /* Hardcoded dark for better browser support */
+            color: #fafafa;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: var(--accent-color);
+            outline: none;
+        }
+
+        .code-editor {
+            background: #1e1e1e;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: #d4d4d4;
+            font-family: 'Consolas', 'Monaco', monospace;
+            padding: 15px;
+            min-height: 200px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .submit-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        @media (max-width: 900px) {
+            .submit-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-cube"></i>
+                <span>Shades By Jay</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Back to Library</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="submit-container">
+        <div class="editor-section">
+            <div class="form-group">
+                <label>Component Name</label>
+                <input type="text" id="compName" class="form-input" placeholder="e.g., Neon Button">
+            </div>
+            
+            <div class="form-group">
+                <label>Category</label>
+                <select id="compCategory" class="form-select">
+                    <option value="buttons">Buttons</option>
+                    <option value="cards">Cards</option>
+                    <option value="loaders">Loaders</option>
+                    <option value="inputs">Inputs</option>
+                    <option value="switches">Switches</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>HTML Code</label>
+                <textarea id="htmlCode" class="code-editor" placeholder="<button class='my-btn'>Click Me</button>"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>CSS Code</label>
+                <textarea id="cssCode" class="code-editor" placeholder=".my-btn { background: blue; }"></textarea>
+            </div>
+
+            <button id="submitBtn" class="submit-btn">Submit Component</button>
+        </div>
+
+        <div class="preview-section">
+            <div class="preview-header">Live Preview</div>
+            <div class="preview-area" id="previewArea">
+                <!-- Preview will appear here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="js/supabase-config.js"></script>
+    <script>
+        const htmlInput = document.getElementById('htmlCode');
+        const cssInput = document.getElementById('cssCode');
+        const previewArea = document.getElementById('previewArea');
+        const submitBtn = document.getElementById('submitBtn');
+        const nameInput = document.getElementById('compName');
+        const categoryInput = document.getElementById('compCategory');
+
+        // Initialize Shadow DOM
+        const shadow = previewArea.attachShadow({ mode: 'open' });
+
+        // Live Preview Logic
+        function updatePreview() {
+            const html = htmlInput.value;
+            const css = `<style>
+                :host {
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                ${cssInput.value}
+            </style>`;
+            
+            shadow.innerHTML = css + html;
+        }
+
+        htmlInput.addEventListener('input', updatePreview);
+        cssInput.addEventListener('input', updatePreview);
+
+        // Submit Logic
+        submitBtn.addEventListener('click', async () => {
+            if (!window.supabaseClient) {
+                alert('Database not configured! Please check js/supabase-config.js');
+                return;
+            }
+
+            const name = nameInput.value;
+            const html = htmlInput.value;
+            const css = cssInput.value;
+            const category = categoryInput.value;
+
+            if (!name || !html || !css) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+
+            try {
+                const { data, error } = await window.supabaseClient
+                    .from('components')
+                    .insert([
+                        { 
+                            name: name,
+                            html: html,
+                            css: css,
+                            category: category,
+                            status: 'pending',
+                            tags: [category, 'community']
+                        }
+                    ]);
+
+                if (error) throw error;
+
+                alert('Component submitted successfully! It will appear after approval.');
+                window.location.href = 'index.html';
+            } catch (err) {
+                console.error('Error:', err);
+                alert('Error submitting component: ' + err.message);
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Component';
+            }
+        });
+    </script>
+</body>
+</html>

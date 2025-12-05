@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Shades By Jay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .admin-container {
+            max-width: 1200px;
+            margin: 100px auto;
+            padding: 0 20px;
+        }
+
+        .login-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-box {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 12px;
+            margin: 20px 0;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: white;
+            border-radius: 8px;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .pending-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .pending-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        .pending-preview {
+            height: 150px;
+            background-image: radial-gradient(var(--border-color) 1px, transparent 1px);
+            background-size: 10px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            padding: 20px;
+        }
+
+        .pending-info {
+            padding: 20px;
+        }
+
+        .pending-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn-approve {
+            flex: 1;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .btn-reject {
+            flex: 1;
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-box">
+            <h2>Admin Access</h2>
+            <input type="password" id="adminPass" class="login-input" placeholder="Enter Password">
+            <button onclick="checkLogin()" class="submit-btn" style="width: 100%">Login</button>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="logo">
+                <i class="fas fa-cube"></i>
+                <span>Shades Admin</span>
+            </a>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <div class="dashboard-header">
+            <h1>Pending Submissions</h1>
+            <button onclick="loadPending()" class="submit-btn" style="width: auto">Refresh</button>
+        </div>
+        <div id="pendingGrid" class="pending-grid">
+            <!-- Items will load here -->
+        </div>
+    </div>
+
+    <script src="../js/supabase-config.js"></script>
+    <script>
+        // Simple client-side protection (Not secure for enterprise, fine for side project)
+        const ADMIN_PASS = "1234"; 
+
+        function checkLogin() {
+            const input = document.getElementById('adminPass').value;
+            if (input === ADMIN_PASS) {
+                document.getElementById('loginOverlay').style.display = 'none';
+                loadPending();
+            } else {
+                alert('Wrong password');
+            }
+        }
+
+        async function loadPending() {
+            if (!window.supabaseClient) return;
+
+            const grid = document.getElementById('pendingGrid');
+            grid.innerHTML = '<p>Loading...</p>';
+
+            const { data, error } = await window.supabaseClient
+                .from('components')
+                .select('*')
+                .eq('status', 'pending')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                grid.innerHTML = `<p>Error: ${error.message}</p>`;
+                return;
+            }
+
+            if (data.length === 0) {
+                grid.innerHTML = '<p>No pending submissions.</p>';
+                return;
+            }
+
+            grid.innerHTML = '';
+            data.forEach(comp => {
+                const card = document.createElement('div');
+                card.className = 'pending-card';
+                
+                // Create shadow DOM for preview to isolate styles
+                const previewId = `preview-${comp.id}`;
+                
+                card.innerHTML = `
+                    <div class="pending-preview" id="${previewId}"></div>
+                    <div class="pending-info">
+                        <h3>${comp.name}</h3>
+                        <p style="color: #888; font-size: 0.9em">${comp.category}</p>
+                        <div class="pending-actions">
+                            <button onclick="approve('${comp.id}')" class="btn-approve">Approve</button>
+                            <button onclick="reject('${comp.id}')" class="btn-reject">Reject</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+
+                // Inject preview
+                const previewContainer = document.getElementById(previewId);
+                const shadow = previewContainer.attachShadow({mode: 'open'});
+                shadow.innerHTML = `<style>${comp.css}</style>${comp.html}`;
+            });
+        }
+
+        async function approve(id) {
+            if(!confirm('Approve this component?')) return;
+            
+            const { error } = await window.supabaseClient
+                .from('components')
+                .update({ status: 'approved' })
+                .eq('id', id);
+
+            if (error) alert(error.message);
+            else loadPending();
+        }
+
+        async function reject(id) {
+            if(!confirm('Delete this component?')) return;
+
+            const { error } = await window.supabaseClient
+                .from('components')
+                .delete()
+                .eq('id', id);
+
+            if (error) alert(error.message);
+            else loadPending();
+        }
+    </script>
+</body>
+</html>

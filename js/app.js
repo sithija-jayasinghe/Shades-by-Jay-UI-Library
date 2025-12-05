@@ -38,8 +38,38 @@ let currentTag = 'all';
 let currentComponent = null;
 
 // Initialize
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Load static components first
     renderComponents(allComponents);
+    
+    // Try to load dynamic components from Supabase
+    if (window.supabaseClient) {
+        try {
+            const { data, error } = await window.supabaseClient
+                .from('components')
+                .select('*')
+                .eq('status', 'approved');
+                
+            if (data && !error) {
+                // Add dynamic components to the list
+                const dynamicComponents = data.map(comp => ({
+                    id: comp.id, // UUID from DB
+                    name: comp.name,
+                    category: comp.category,
+                    tags: comp.tags || [],
+                    html: comp.html,
+                    css: comp.css
+                }));
+                
+                allComponents.push(...dynamicComponents);
+                // Re-render with new data
+                filterComponents(); 
+            }
+        } catch (e) {
+            console.log('Supabase not connected or empty');
+        }
+    }
+
     initializeEventListeners();
     loadTheme();
 });
