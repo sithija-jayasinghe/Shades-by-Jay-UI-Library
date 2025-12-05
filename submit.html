@@ -187,6 +187,7 @@
     </div>
 
     <script src="js/supabase-config.js"></script>
+    <script src="js/notifications.js"></script>
     <script>
         const htmlInput = document.getElementById('htmlCode');
         const cssInput = document.getElementById('cssCode');
@@ -222,7 +223,7 @@
         // Submit Logic
         submitBtn.addEventListener('click', async () => {
             if (!window.supabaseClient) {
-                alert('Database not configured! Please check js/supabase-config.js');
+                showToast('Database not configured! Please check js/supabase-config.js', 'error');
                 return;
             }
 
@@ -232,7 +233,7 @@
             const category = categoryInput.value;
 
             if (!name || !html || !css) {
-                alert('Please fill in all fields');
+                showToast('Please fill in all fields', 'error');
                 return;
             }
 
@@ -255,11 +256,13 @@
 
                 if (error) throw error;
 
-                alert('Component submitted successfully! It will appear after approval.');
-                window.location.href = 'index.html';
+                showToast('Component submitted successfully! It will appear after approval.', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
             } catch (err) {
                 console.error('Error:', err);
-                alert('Error submitting component: ' + err.message);
+                showToast('Error submitting component: ' + err.message, 'error');
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Submit Component';
             }

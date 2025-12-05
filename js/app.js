@@ -268,6 +268,9 @@ function initializeEventListeners() {
     // Category Navigation
     navLinks.forEach(link => {
         link.addEventListener('click', (e) => {
+            // If it's a real link (like Submit), let it navigate
+            if (!link.dataset.category) return;
+
             e.preventDefault();
             navLinks.forEach(l => l.classList.remove('active'));
             link.classList.add('active');

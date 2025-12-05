@@ -188,5 +188,13 @@
     <script src="js/components-switches.js"></script>
     <script src="js/components-3d-cards.js"></script>
     <script src="js/app.js"></script>
+    
+    <script>
+        // Secret Admin Access: Right-click the logo
+        document.querySelector('.logo').addEventListener('contextmenu', (e) => {
+            e.preventDefault(); // Prevent default right-click menu
+            window.location.href = 'admin/index.html';
+        });
+    </script>
 </body>
 </html>

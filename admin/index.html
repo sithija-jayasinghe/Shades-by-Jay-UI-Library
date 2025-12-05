@@ -107,6 +107,20 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
+        .admin-select, .admin-input {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            font-family: inherit;
+        }
+        
+        .admin-select option {
+            background: #1f1f23;
+        }
     </style>
 </head>
 <body>
@@ -138,9 +152,10 @@
     </div>
 
     <script src="../js/supabase-config.js"></script>
+    <script src="../js/notifications.js"></script>
     <script>
         // Simple client-side protection (Not secure for enterprise, fine for side project)
-        const ADMIN_PASS = "1234"; 
+        const ADMIN_PASS = "admin123"; 
 
         function checkLogin() {
             const input = document.getElementById('adminPass').value;
@@ -148,7 +163,7 @@
                 document.getElementById('loginOverlay').style.display = 'none';
                 loadPending();
             } else {
-                alert('Wrong password');
+                showToast('Wrong password', 'error');
             }
         }
 
@@ -181,12 +196,27 @@
                 
                 // Create shadow DOM for preview to isolate styles
                 const previewId = `preview-${comp.id}`;
+                const categoryId = `category-${comp.id}`;
+                const tagsId = `tags-${comp.id}`;
                 
                 card.innerHTML = `
                     <div class="pending-preview" id="${previewId}"></div>
                     <div class="pending-info">
                         <h3>${comp.name}</h3>
-                        <p style="color: #888; font-size: 0.9em">${comp.category}</p>
+                        <div style="margin: 10px 0; display: flex; flex-direction: column; gap: 8px;">
+                            <label style="font-size: 0.8rem; color: #888;">Category</label>
+                            <select id="${categoryId}" class="admin-select">
+                                <option value="buttons" ${comp.category === 'buttons' ? 'selected' : ''}>Buttons</option>
+                                <option value="cards" ${comp.category === 'cards' ? 'selected' : ''}>Cards</option>
+                                <option value="loaders" ${comp.category === 'loaders' ? 'selected' : ''}>Loaders</option>
+                                <option value="inputs" ${comp.category === 'inputs' ? 'selected' : ''}>Inputs</option>
+                                <option value="switches" ${comp.category === 'switches' ? 'selected' : ''}>Switches</option>
+                                <option value="other" ${comp.category === 'other' ? 'selected' : ''}>Other</option>
+                            </select>
+                            
+                            <label style="font-size: 0.8rem; color: #888;">Tags (comma separated)</label>
+                            <input type="text" id="${tagsId}" class="admin-input" value="${(comp.tags || []).join(', ')}" placeholder="e.g. animated, 3d, glass">
+                        </div>
                         <div class="pending-actions">
                             <button onclick="approve('${comp.id}')" class="btn-approve">Approve</button>
                             <button onclick="reject('${comp.id}')" class="btn-reject">Reject</button>
@@ -198,20 +228,37 @@
                 // Inject preview
                 const previewContainer = document.getElementById(previewId);
                 const shadow = previewContainer.attachShadow({mode: 'open'});
-                shadow.innerHTML = `<style>${comp.css}</style>${comp.html}`;
+                shadow.innerHTML = `<style>
+                    :host { display: flex; align-items: center; justify-content: center; height: 100%; width: 100%; }
+                    ${comp.css}
+                </style>${comp.html}`;
             });
         }
 
         async function approve(id) {
-            if(!confirm('Approve this component?')) return;
+            const categorySelect = document.getElementById(`category-${id}`);
+            const tagsInput = document.getElementById(`tags-${id}`);
             
+            const newCategory = categorySelect.value;
+            const newTags = tagsInput.value.split(',').map(t => t.trim()).filter(t => t);
+
+            // Add the category itself as a tag if not present
+            if (!newTags.includes(newCategory)) newTags.push(newCategory);
+
             const { error } = await window.supabaseClient
                 .from('components')
-                .update({ status: 'approved' })
+                .update({ 
+                    status: 'approved',
+                    category: newCategory,
+                    tags: newTags
+                })
                 .eq('id', id);
 
-            if (error) alert(error.message);
-            else loadPending();
+            if (error) showToast(error.message, 'error');
+            else {
+                showToast('Component approved!', 'success');
+                loadPending();
+            }
         }
 
         async function reject(id) {
@@ -222,8 +269,11 @@
                 .delete()
                 .eq('id', id);
 
-            if (error) alert(error.message);
-            else loadPending();
+            if (error) showToast(error.message, 'error');
+            else {
+                showToast('Component rejected', 'info');
+                loadPending();
+            }
         }
     </script>
 </body>
