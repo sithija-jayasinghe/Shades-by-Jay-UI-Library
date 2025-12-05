@@ -70,6 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    updateStats(); // Update stats after loading everything
     initializeEventListeners();
     loadTheme();
 });
@@ -337,4 +338,29 @@ function debounce(func, wait) {
         clearTimeout(timeout);
         timeout = setTimeout(later, wait);
     };
+}
+
+// Update Hero Stats
+function updateStats() {
+    const totalEl = document.getElementById('totalStats');
+    const loaderEl = document.getElementById('loaderStats');
+    const threeDEl = document.getElementById('3dStats');
+
+    if (totalEl) {
+        totalEl.textContent = allComponents.length + '+';
+    }
+
+    if (loaderEl) {
+        const loaderCount = allComponents.filter(c => 
+            c.category === 'loaders' || (c.tags && c.tags.includes('loader'))
+        ).length;
+        loaderEl.textContent = loaderCount + '+';
+    }
+
+    if (threeDEl) {
+        const threeDCount = allComponents.filter(c => 
+            (c.tags && c.tags.includes('3d')) || (c.tags && c.tags.includes('3D'))
+        ).length;
+        threeDEl.textContent = threeDCount + '+';
+    }
 }
