@@ -346,6 +346,10 @@ button {
     overflow: hidden;
 }
 
+.component-card[data-category="cards"] .card-preview {
+    height: 480px;
+}
+
 .card-preview::before {
     content: '';
     position: absolute;

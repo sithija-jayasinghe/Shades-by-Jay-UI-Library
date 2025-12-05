@@ -24,7 +24,8 @@ const allComponents = [
     ...(typeof uiComponents !== 'undefined' ? uiComponents : []),
     ...(typeof keyboardComponents !== 'undefined' ? keyboardComponents : []),
     ...(typeof keyboardComponents2 !== 'undefined' ? keyboardComponents2 : []),
-    ...(typeof keyboardComponents3 !== 'undefined' ? keyboardComponents3 : [])
+    ...(typeof keyboardComponents3 !== 'undefined' ? keyboardComponents3 : []),
+    ...(typeof cardComponents !== 'undefined' ? cardComponents : [])
 ];
 
 // State
