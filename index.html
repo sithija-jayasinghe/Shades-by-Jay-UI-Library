@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UI Verse - Open Source UI Library</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-cube"></i>
+                <span>UI Verse</span>
+            </a>
+            <div class="nav-links">
+                <a href="#" class="nav-link active" data-category="all">All</a>
+                <a href="#" class="nav-link" data-category="buttons">Buttons</a>
+                <a href="#" class="nav-link" data-category="cards">Cards</a>
+                <a href="#" class="nav-link" data-category="loaders">Loaders</a>
+                <a href="#" class="nav-link" data-category="switches">Switches</a>
+                <a href="#" class="nav-link" data-category="inputs">Inputs</a>
+            </div>
+            <div class="nav-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" placeholder="Search components...">
+                </div>
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Open Source UI Library</h1>
+            <p>Community-built library of UI elements. Copy as HTML/CSS with a single click.</p>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number">50+</span>
+                    <span class="stat-label">UI Elements</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">25+</span>
+                    <span class="stat-label">Living Components</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">MIT</span>
+                    <span class="stat-label">License</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Category Tags -->
+    <section class="tags-section">
+        <div class="tags-container">
+            <span class="tag active" data-tag="all">All</span>
+            <span class="tag" data-tag="living">🌿 Living</span>
+            <span class="tag" data-tag="animated">Animated</span>
+            <span class="tag" data-tag="minimal">Minimal</span>
+            <span class="tag" data-tag="gradient">Gradient</span>
+            <span class="tag" data-tag="3d">3D</span>
+            <span class="tag" data-tag="neon">Neon</span>
+            <span class="tag" data-tag="glassmorphism">Glassmorphism</span>
+            <span class="tag" data-tag="neumorphism">Neumorphism</span>
+            <span class="tag" data-tag="morph">Morphing</span>
+            <span class="tag" data-tag="glow">Glow</span>
+            <span class="tag" data-tag="pulse">Pulse</span>
+        </div>
+    </section>
+
+    <!-- Components Grid -->
+    <main class="components-section">
+        <div class="components-grid" id="componentsGrid">
+            <!-- Components will be loaded dynamically -->
+        </div>
+    </main>
+
+    <!-- Code Modal -->
+    <div class="modal" id="codeModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Component Name</h2>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-preview" id="modalPreview">
+                <!-- Live preview will be shown here -->
+            </div>
+            <div class="code-tabs">
+                <button class="code-tab active" data-tab="html">HTML</button>
+                <button class="code-tab" data-tab="css">CSS</button>
+            </div>
+            <div class="code-container">
+                <div class="code-block active" id="htmlCode">
+                    <div class="code-header">
+                        <span>HTML</span>
+                        <button class="copy-btn" data-type="html">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code id="htmlContent"></code></pre>
+                </div>
+                <div class="code-block" id="cssCode">
+                    <div class="code-header">
+                        <span>CSS</span>
+                        <button class="copy-btn" data-type="css">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                    </div>
+                    <pre><code id="cssContent"></code></pre>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span>Copied to clipboard!</span>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-brand">
+                <a href="index.html" class="logo">
+                    <i class="fas fa-cube"></i>
+                    <span>UI Verse</span>
+                </a>
+                <p>Free and open-source UI components for your next project.</p>
+            </div>
+            <div class="footer-links">
+                <div class="footer-column">
+                    <h4>Resources</h4>
+                    <a href="#">Documentation</a>
+                    <a href="#">Guidelines</a>
+                    <a href="#">Blog</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Community</h4>
+                    <a href="#">GitHub</a>
+                    <a href="#">Discord</a>
+                    <a href="#">Twitter</a>
+                </div>
+                <div class="footer-column">
+                    <h4>Legal</h4>
+                    <a href="#">MIT License</a>
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 UI Verse. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
