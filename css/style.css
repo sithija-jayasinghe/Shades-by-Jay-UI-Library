@@ -350,6 +350,10 @@ button {
     height: 480px;
 }
 
+.component-card[data-category="retro"] .card-preview {
+    height: 350px;
+}
+
 .card-preview::before {
     content: '';
     position: absolute;
