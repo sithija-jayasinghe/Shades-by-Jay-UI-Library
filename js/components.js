@@ -2517,6 +2517,1070 @@ const uiComponents = [
     }
     90% { opacity: 1; }
 }`
+    },
+
+    // ==================== CREATIVE INTERACTIVE BUTTONS ====================
+    {
+        id: 51,
+        name: "Folder Documents Button",
+        category: "buttons",
+        tags: ["animated", "3d", "creative", "icon"],
+        html: `<button class="documents-btn">
+    <span class="folder-container">
+        <svg class="file-back" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3802C51.8285 0 53.2056 0.627965 54.1553 1.72142L64.3303 13.4371C65.2799 14.5306 66.657 15.1585 68.1053 15.1585H141.509C143.718 15.1585 145.509 16.9494 145.509 19.1585V109C145.509 111.209 143.718 113 141.509 113H3.99999C1.79085 113 0 111.209 0 109V4Z" fill="url(#paint0_linear_117_4)"></path>
+            <defs><linearGradient id="paint0_linear_117_4" x1="0" y1="0" x2="72.93" y2="95.4066" gradientUnits="userSpaceOnUse"><stop stop-color="#8F88C2"></stop><stop offset="1" stop-color="#5C52A2"></stop></linearGradient></defs>
+        </svg>
+        <svg class="file-page" viewBox="0 0 88 99" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0.5" y="0.5" width="87" height="98" rx="3.5" fill="white" stroke="#EDEDF0"></rect>
+        </svg>
+        <svg class="file-front" viewBox="0 0 146 113" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 4C0 1.79086 1.79086 0 4 0H50.3802C51.8285 0 53.2056 0.627965 54.1553 1.72142L64.3303 13.4371C65.2799 14.5306 66.657 15.1585 68.1053 15.1585H141.509C143.718 15.1585 145.509 16.9494 145.509 19.1585V109C145.509 111.209 143.718 113 141.509 113H3.99999C1.79085 113 0 111.209 0 109V4Z" fill="url(#paint0_linear_117_5)"></path>
+            <defs><linearGradient id="paint0_linear_117_5" x1="0" y1="0" x2="72.93" y2="95.4066" gradientUnits="userSpaceOnUse"><stop stop-color="#C3BBFF"></stop><stop offset="1" stop-color="#8F88C2"></stop></linearGradient></defs>
+        </svg>
+    </span>
+    <span class="text">Documents</span>
+</button>`,
+        css: `.documents-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: fit-content;
+    height: 45px;
+    border: none;
+    padding: 0px 15px;
+    border-radius: 5px;
+    background-color: rgb(49, 49, 83);
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.folder-container {
+    width: 40px;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    position: relative;
+}
+
+.file-back {
+    z-index: 1;
+    width: 80%;
+    height: auto;
+}
+
+.file-page {
+    width: 50%;
+    height: auto;
+    position: absolute;
+    z-index: 2;
+    transition: all 0.3s ease-out;
+}
+
+.file-front {
+    width: 85%;
+    height: auto;
+    position: absolute;
+    z-index: 3;
+    opacity: 0.95;
+    transform-origin: bottom;
+    transition: all 0.3s ease-out;
+}
+
+.documents-btn .text {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.documents-btn:hover .file-page {
+    transform: translateY(-5px);
+}
+
+.documents-btn:hover {
+    background-color: rgb(58, 58, 94);
+}
+
+.documents-btn:active {
+    transform: scale(0.95);
+}
+
+.documents-btn:hover .file-front {
+    transform: rotateX(30deg);
+}`
+    },
+    {
+        id: 52,
+        name: "Send Mail Button",
+        category: "buttons",
+        tags: ["animated", "3d", "creative", "icon"],
+        html: `<button class="send-mail-btn">
+    <span class="mail-container">
+        <svg class="mail-back" viewBox="0 0 64 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 4C0 1.79086 1.79086 0 4 0H60C62.2091 0 64 1.79086 64 4V40C64 42.2091 62.2091 44 60 44H4C1.79086 44 0 42.2091 0 40V4Z" fill="#5C52A2"/>
+        </svg>
+        <svg class="mail-flap" viewBox="0 0 64 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M0 0L32 22L64 0V24C64 26.2091 62.2091 28 60 28H4C1.79086 28 0 26.2091 0 24V0Z" fill="url(#paint0_linear_mail)"/>
+            <defs><linearGradient id="paint0_linear_mail" x1="32" y1="0" x2="32" y2="28" gradientUnits="userSpaceOnUse"><stop stop-color="#8F88C2"/><stop offset="1" stop-color="#5C52A2"/></linearGradient></defs>
+        </svg>
+        <svg class="mail-letter" viewBox="0 0 50 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="1" y="1" width="48" height="34" rx="2" fill="white" stroke="#E0E0E0" stroke-width="2"/>
+            <line x1="8" y1="10" x2="42" y2="10" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round"/>
+            <line x1="8" y1="18" x2="36" y2="18" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round"/>
+            <line x1="8" y1="26" x2="28" y2="26" stroke="#CCCCCC" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+    </span>
+    <span class="text">Send Mail</span>
+</button>`,
+        css: `.send-mail-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+.mail-container {
+    position: relative;
+    width: 40px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.mail-back {
+    position: absolute;
+    width: 100%;
+    height: auto;
+}
+
+.mail-flap {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    transform-origin: top center;
+    transition: all 0.4s ease;
+}
+
+.mail-letter {
+    position: absolute;
+    width: 70%;
+    height: auto;
+    transition: all 0.4s ease;
+    z-index: 2;
+}
+
+.send-mail-btn .text {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.send-mail-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.5);
+}
+
+.send-mail-btn:hover .mail-flap {
+    transform: rotateX(180deg);
+}
+
+.send-mail-btn:hover .mail-letter {
+    transform: translateY(-10px);
+}
+
+.send-mail-btn:active {
+    transform: scale(0.95);
+}`
+    },
+    {
+        id: 53,
+        name: "Download Button",
+        category: "buttons",
+        tags: ["animated", "creative", "icon", "interactive"],
+        html: `<button class="download-btn">
+    <span class="icon-container">
+        <svg class="download-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path class="arrow" d="M12 4v12M12 16l-4-4M12 16l4-4"/>
+            <path class="bar" d="M4 20h16"/>
+        </svg>
+    </span>
+    <span class="text">Download</span>
+</button>`,
+        css: `.download-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #11998e, #38ef7d);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(56, 239, 125, 0.3);
+}
+
+.icon-container {
+    width: 24px;
+    height: 24px;
+}
+
+.download-icon {
+    width: 100%;
+    height: 100%;
+    color: white;
+}
+
+.download-icon .arrow {
+    transition: transform 0.3s ease;
+}
+
+.download-icon .bar {
+    transition: all 0.3s ease;
+}
+
+.download-btn .text {
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(56, 239, 125, 0.4);
+}
+
+.download-btn:hover .arrow {
+    animation: bounce-down 0.6s ease infinite;
+}
+
+.download-btn:active {
+    transform: scale(0.95);
+}
+
+@keyframes bounce-down {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(3px); }
+}`
+    },
+    {
+        id: 54,
+        name: "Upload Button",
+        category: "buttons",
+        tags: ["animated", "creative", "icon", "interactive"],
+        html: `<button class="upload-btn">
+    <span class="cloud-container">
+        <svg class="cloud" viewBox="0 0 48 32" fill="none">
+            <path d="M38 28H14C7.373 28 2 22.627 2 16C2 10.044 6.376 5.108 12.062 4.193C14.303 1.628 17.636 0 21.333 0C26.682 0 31.233 3.478 32.815 8.247C33.537 8.086 34.288 8 35.059 8C41.627 8 47 13.373 47 20C47 24.287 44.708 28 38 28Z" fill="url(#cloud_grad)"/>
+            <defs><linearGradient id="cloud_grad" x1="24" y1="0" x2="24" y2="32"><stop stop-color="#f0f0f0"/><stop offset="1" stop-color="#d0d0d0"/></linearGradient></defs>
+        </svg>
+        <svg class="arrow-up" viewBox="0 0 16 16" fill="none" stroke="white" stroke-width="2">
+            <path d="M8 12V4M8 4L4 8M8 4L12 8"/>
+        </svg>
+    </span>
+    <span class="text">Upload</span>
+</button>`,
+        css: `.upload-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #00c6fb, #005bea);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 91, 234, 0.3);
+}
+
+.cloud-container {
+    position: relative;
+    width: 36px;
+    height: 24px;
+}
+
+.cloud {
+    width: 100%;
+    height: 100%;
+}
+
+.arrow-up {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -30%);
+    transition: transform 0.3s ease;
+}
+
+.upload-btn .text {
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.upload-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 91, 234, 0.4);
+}
+
+.upload-btn:hover .arrow-up {
+    animation: float-up 0.8s ease infinite;
+}
+
+.upload-btn:active {
+    transform: scale(0.95);
+}
+
+@keyframes float-up {
+    0%, 100% { transform: translate(-50%, -30%); }
+    50% { transform: translate(-50%, -50%); }
+}`
+    },
+    {
+        id: 55,
+        name: "Music Play Button",
+        category: "buttons",
+        tags: ["animated", "creative", "icon", "music"],
+        html: `<button class="music-play-btn">
+    <span class="music-icon">
+        <span class="bar bar1"></span>
+        <span class="bar bar2"></span>
+        <span class="bar bar3"></span>
+        <span class="bar bar4"></span>
+    </span>
+    <span class="text">Now Playing</span>
+</button>`,
+        css: `.music-play-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #1DB954, #1ed760);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(29, 185, 84, 0.4);
+}
+
+.music-icon {
+    display: flex;
+    align-items: flex-end;
+    gap: 3px;
+    height: 20px;
+}
+
+.music-icon .bar {
+    width: 4px;
+    background: white;
+    border-radius: 2px;
+    animation: music-wave 1s ease-in-out infinite;
+}
+
+.bar1 { height: 60%; animation-delay: 0s; }
+.bar2 { height: 100%; animation-delay: 0.2s; }
+.bar3 { height: 40%; animation-delay: 0.4s; }
+.bar4 { height: 80%; animation-delay: 0.6s; }
+
+.music-play-btn .text {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.music-play-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(29, 185, 84, 0.5);
+}
+
+.music-play-btn:active {
+    transform: scale(0.98);
+}
+
+@keyframes music-wave {
+    0%, 100% { height: 40%; }
+    50% { height: 100%; }
+}`
+    },
+    {
+        id: 56,
+        name: "Cart Button",
+        category: "buttons",
+        tags: ["animated", "creative", "icon", "ecommerce"],
+        html: `<button class="cart-btn">
+    <span class="cart-container">
+        <svg class="cart-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M6 6h15l-1.5 9h-12z"/>
+            <circle cx="9" cy="20" r="1.5"/>
+            <circle cx="17" cy="20" r="1.5"/>
+            <path d="M6 6L5 3H2"/>
+        </svg>
+        <span class="cart-item"></span>
+    </span>
+    <span class="text">Add to Cart</span>
+</button>`,
+        css: `.cart-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #ff6b6b, #ee5a5a);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(238, 90, 90, 0.3);
+}
+
+.cart-container {
+    position: relative;
+    width: 24px;
+    height: 24px;
+}
+
+.cart-icon {
+    width: 100%;
+    height: 100%;
+    color: white;
+}
+
+.cart-item {
+    position: absolute;
+    top: -2px;
+    right: -4px;
+    width: 10px;
+    height: 10px;
+    background: #ffe66d;
+    border-radius: 50%;
+    opacity: 0;
+    transform: scale(0);
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.cart-btn .text {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.cart-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(238, 90, 90, 0.4);
+}
+
+.cart-btn:hover .cart-item {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.cart-btn:hover .cart-icon {
+    animation: cart-shake 0.4s ease;
+}
+
+.cart-btn:active {
+    transform: scale(0.95);
+}
+
+@keyframes cart-shake {
+    0%, 100% { transform: rotate(0); }
+    25% { transform: rotate(-10deg); }
+    75% { transform: rotate(10deg); }
+}`
+    },
+    {
+        id: 57,
+        name: "Notification Bell Button",
+        category: "buttons",
+        tags: ["animated", "creative", "icon", "notification"],
+        html: `<button class="bell-btn">
+    <span class="bell-container">
+        <svg class="bell-icon" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/>
+        </svg>
+        <span class="notification-dot"></span>
+    </span>
+</button>`,
+        css: `.bell-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(135deg, #ffecd2, #fcb69f);
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(252, 182, 159, 0.4);
+}
+
+.bell-container {
+    position: relative;
+    width: 26px;
+    height: 26px;
+}
+
+.bell-icon {
+    width: 100%;
+    height: 100%;
+    color: #8b5a2b;
+    transition: transform 0.3s;
+    transform-origin: top center;
+}
+
+.notification-dot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    background: #ff4757;
+    border-radius: 50%;
+    border: 2px solid #ffecd2;
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.bell-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(252, 182, 159, 0.5);
+}
+
+.bell-btn:hover .bell-icon {
+    animation: ring-bell 0.6s ease;
+}
+
+.bell-btn:active {
+    transform: scale(0.95);
+}
+
+@keyframes ring-bell {
+    0%, 100% { transform: rotate(0); }
+    20% { transform: rotate(15deg); }
+    40% { transform: rotate(-15deg); }
+    60% { transform: rotate(10deg); }
+    80% { transform: rotate(-10deg); }
+}
+
+@keyframes pulse-dot {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}`
+    },
+    {
+        id: 58,
+        name: "Settings Gear Button",
+        category: "buttons",
+        tags: ["animated", "creative", "icon", "settings"],
+        html: `<button class="settings-btn">
+    <svg class="gear-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+    </svg>
+    <span class="text">Settings</span>
+</button>`,
+        css: `.settings-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.gear-icon {
+    width: 22px;
+    height: 22px;
+    color: white;
+    transition: transform 0.6s ease;
+}
+
+.settings-btn .text {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.settings-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.settings-btn:hover .gear-icon {
+    transform: rotate(180deg);
+}
+
+.settings-btn:active {
+    transform: scale(0.95);
+}`
+    },
+    {
+        id: 59,
+        name: "Like Heart Button",
+        category: "buttons",
+        tags: ["animated", "creative", "icon", "social"],
+        html: `<button class="like-heart-btn">
+    <svg class="heart-icon" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+    </svg>
+    <span class="like-count">2.4k</span>
+</button>`,
+        css: `.like-heart-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: #1a1a2e;
+    border: 2px solid #333;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.heart-icon {
+    width: 22px;
+    height: 22px;
+    fill: #666;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.like-count {
+    color: #888;
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.like-heart-btn:hover {
+    border-color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.1);
+}
+
+.like-heart-btn:hover .heart-icon {
+    fill: #ff6b6b;
+    transform: scale(1.2);
+}
+
+.like-heart-btn:hover .like-count {
+    color: #ff6b6b;
+}
+
+.like-heart-btn:active .heart-icon {
+    animation: heart-pop 0.4s ease;
+}
+
+@keyframes heart-pop {
+    0% { transform: scale(1.2); }
+    50% { transform: scale(1.5); }
+    100% { transform: scale(1.2); }
+}`
+    },
+    {
+        id: 60,
+        name: "Bookmark Button",
+        category: "buttons",
+        tags: ["animated", "creative", "icon", "social"],
+        html: `<button class="bookmark-btn">
+    <svg class="bookmark-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/>
+    </svg>
+    <span class="text">Save</span>
+</button>`,
+        css: `.bookmark-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 22px;
+    background: #1a1a2e;
+    border: 2px solid #444;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.bookmark-icon {
+    width: 20px;
+    height: 20px;
+    color: #888;
+    fill: transparent;
+    transition: all 0.3s ease;
+}
+
+.bookmark-btn .text {
+    color: #888;
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.bookmark-btn:hover {
+    border-color: #f1c40f;
+    background: rgba(241, 196, 15, 0.1);
+}
+
+.bookmark-btn:hover .bookmark-icon {
+    color: #f1c40f;
+    fill: #f1c40f;
+    transform: translateY(-2px);
+}
+
+.bookmark-btn:hover .text {
+    color: #f1c40f;
+}
+
+.bookmark-btn:active {
+    transform: scale(0.95);
+}`
+    },
+    {
+        id: 61,
+        name: "Share Button",
+        category: "buttons",
+        tags: ["animated", "creative", "icon", "social"],
+        html: `<button class="share-btn">
+    <svg class="share-icon" viewBox="0 0 24 24" fill="currentColor">
+        <circle cx="18" cy="5" r="3"/>
+        <circle cx="6" cy="12" r="3"/>
+        <circle cx="18" cy="19" r="3"/>
+        <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" stroke="currentColor" stroke-width="2"/>
+        <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" stroke="currentColor" stroke-width="2"/>
+    </svg>
+    <span class="text">Share</span>
+</button>`,
+        css: `.share-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    background: linear-gradient(135deg, #a8edea, #fed6e3);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(168, 237, 234, 0.3);
+}
+
+.share-icon {
+    width: 20px;
+    height: 20px;
+    color: #2c3e50;
+    transition: transform 0.3s ease;
+}
+
+.share-btn .text {
+    color: #2c3e50;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.share-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(168, 237, 234, 0.5);
+}
+
+.share-btn:hover .share-icon {
+    animation: share-bounce 0.5s ease;
+}
+
+.share-btn:active {
+    transform: scale(0.95);
+}
+
+@keyframes share-bounce {
+    0%, 100% { transform: scale(1) rotate(0); }
+    50% { transform: scale(1.2) rotate(15deg); }
+}`
+    },
+    {
+        id: 62,
+        name: "Trash Delete Button",
+        category: "buttons",
+        tags: ["animated", "creative", "icon", "danger"],
+        html: `<button class="trash-btn">
+    <span class="trash-container">
+        <svg class="trash-lid" viewBox="0 0 24 6" fill="currentColor">
+            <path d="M3 6h18V4H3v2zM8 2h8v2H8V2z"/>
+        </svg>
+        <svg class="trash-body" viewBox="0 0 18 18" fill="currentColor">
+            <path d="M1 0h16l-1.5 18H2.5L1 0zM5 3v12M9 3v12M13 3v12" stroke="currentColor" stroke-width="1.5"/>
+        </svg>
+    </span>
+    <span class="text">Delete</span>
+</button>`,
+        css: `.trash-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 22px;
+    background: linear-gradient(135deg, #ff4757, #ff3838);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 71, 87, 0.3);
+}
+
+.trash-container {
+    position: relative;
+    width: 20px;
+    height: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.trash-lid {
+    width: 24px;
+    height: 8px;
+    color: white;
+    transform-origin: right center;
+    transition: transform 0.3s ease;
+}
+
+.trash-body {
+    width: 18px;
+    height: 18px;
+    color: white;
+}
+
+.trash-btn .text {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.trash-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 71, 87, 0.4);
+}
+
+.trash-btn:hover .trash-lid {
+    transform: rotate(-15deg) translateY(-3px);
+}
+
+.trash-btn:active {
+    transform: scale(0.95);
+}`
+    },
+    {
+        id: 63,
+        name: "Power Toggle Button",
+        category: "buttons",
+        tags: ["animated", "creative", "icon", "toggle"],
+        html: `<button class="power-btn">
+    <svg class="power-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <path d="M12 2v10"/>
+        <path d="M18.4 6.6a9 9 0 1 1-12.8 0"/>
+    </svg>
+</button>`,
+        css: `.power-btn {
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(145deg, #1a1a2e, #16213e);
+    border: 3px solid #333;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.power-icon {
+    width: 28px;
+    height: 28px;
+    color: #666;
+    transition: all 0.3s ease;
+}
+
+.power-btn:hover {
+    border-color: #6366f1;
+    box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+}
+
+.power-btn:hover .power-icon {
+    color: #6366f1;
+    filter: drop-shadow(0 0 5px #6366f1);
+}
+
+.power-btn:active {
+    transform: scale(0.95);
+    background: linear-gradient(145deg, #16213e, #1a1a2e);
+}
+
+.power-btn.active {
+    border-color: #22c55e;
+    box-shadow: 0 0 25px rgba(34, 197, 94, 0.4);
+}
+
+.power-btn.active .power-icon {
+    color: #22c55e;
+    filter: drop-shadow(0 0 8px #22c55e);
+}`
+    },
+    {
+        id: 64,
+        name: "Copy Clipboard Button",
+        category: "buttons",
+        tags: ["animated", "creative", "icon", "utility"],
+        html: `<button class="copy-clipboard-btn">
+    <span class="clipboard-container">
+        <svg class="clipboard-back" viewBox="0 0 20 24" fill="currentColor">
+            <rect x="2" y="4" width="16" height="18" rx="2" fill="#4a5568"/>
+        </svg>
+        <svg class="clipboard-front" viewBox="0 0 20 24" fill="currentColor">
+            <rect x="0" y="2" width="16" height="18" rx="2" fill="#718096"/>
+            <rect x="4" y="0" width="8" height="4" rx="1" fill="#a0aec0"/>
+        </svg>
+    </span>
+    <span class="text">Copy</span>
+</button>`,
+        css: `.copy-clipboard-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 22px;
+    background: linear-gradient(135deg, #4a5568, #2d3748);
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(45, 55, 72, 0.3);
+}
+
+.clipboard-container {
+    position: relative;
+    width: 20px;
+    height: 22px;
+}
+
+.clipboard-back, .clipboard-front {
+    position: absolute;
+    width: 20px;
+    height: 22px;
+    transition: all 0.3s ease;
+}
+
+.clipboard-front {
+    top: 2px;
+    left: 2px;
+}
+
+.copy-clipboard-btn .text {
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.copy-clipboard-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(45, 55, 72, 0.4);
+}
+
+.copy-clipboard-btn:hover .clipboard-front {
+    transform: translate(-3px, -3px);
+}
+
+.copy-clipboard-btn:active {
+    transform: scale(0.95);
+}`
+    },
+    {
+        id: 65,
+        name: "Rocket Launch Button",
+        category: "buttons",
+        tags: ["animated", "creative", "icon", "launch"],
+        html: `<button class="rocket-btn">
+    <span class="rocket-container">
+        <span class="rocket">🚀</span>
+        <span class="flame">🔥</span>
+    </span>
+    <span class="text">Launch</span>
+</button>`,
+        css: `.rocket-btn {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, #1a1a2e, #2d2d44);
+    border: 2px solid #6366f1;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.rocket-container {
+    position: relative;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.rocket {
+    font-size: 20px;
+    transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    z-index: 1;
+}
+
+.flame {
+    position: absolute;
+    font-size: 14px;
+    bottom: -8px;
+    opacity: 0;
+    transform: scale(0.5);
+    transition: all 0.3s ease;
+}
+
+.rocket-btn .text {
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.rocket-btn:hover {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    border-color: transparent;
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+}
+
+.rocket-btn:hover .rocket {
+    transform: translateY(-5px) rotate(-45deg);
+}
+
+.rocket-btn:hover .flame {
+    opacity: 1;
+    transform: scale(1);
+    animation: flicker 0.2s ease infinite;
+}
+
+.rocket-btn:active {
+    transform: scale(0.95);
+}
+
+@keyframes flicker {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}`
     }
 ];
 

@@ -19,6 +19,14 @@ const codeBlocks = document.querySelectorAll('.code-block');
 const copyButtons = document.querySelectorAll('.copy-btn');
 const toast = document.getElementById('toast');
 
+// Merge all component arrays into one
+const allComponents = [
+    ...(typeof uiComponents !== 'undefined' ? uiComponents : []),
+    ...(typeof keyboardComponents !== 'undefined' ? keyboardComponents : []),
+    ...(typeof keyboardComponents2 !== 'undefined' ? keyboardComponents2 : []),
+    ...(typeof keyboardComponents3 !== 'undefined' ? keyboardComponents3 : [])
+];
+
 // State
 let currentCategory = 'all';
 let currentTag = 'all';
@@ -26,7 +34,7 @@ let currentComponent = null;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    renderComponents(uiComponents);
+    renderComponents(allComponents);
     initializeEventListeners();
     loadTheme();
 });
@@ -102,7 +110,7 @@ function injectComponentStyles(components) {
 function filterComponents() {
     const searchTerm = searchInput.value.toLowerCase().trim();
     
-    let filtered = uiComponents.filter(component => {
+    let filtered = allComponents.filter(component => {
         const matchesCategory = currentCategory === 'all' || component.category === currentCategory;
         const matchesTag = currentTag === 'all' || component.tags.includes(currentTag);
         const matchesSearch = searchTerm === '' || 
