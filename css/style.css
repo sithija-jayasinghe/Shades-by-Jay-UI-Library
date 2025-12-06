@@ -459,6 +459,10 @@ button {
     height: 480px;
 }
 
+.component-card[data-category="forms"] .card-preview {
+    height: 500px;
+}
+
 .component-card[data-category="retro"] .card-preview {
     height: 350px;
 }
