@@ -93,9 +93,6 @@ function renderComponents(components) {
         const card = createComponentCard(component);
         componentsGrid.appendChild(card);
     });
-    
-    // Apply component styles
-    injectComponentStyles(components);
 }
 
 // Create Component Card
@@ -106,27 +103,69 @@ function createComponentCard(component) {
     card.dataset.category = component.category;
     card.dataset.tags = component.tags.join(',');
     
-    card.innerHTML = `
-        <div class="card-preview">
-            <style>${component.css}</style>
-            ${component.html}
-        </div>
-        <div class="card-info">
-            <div>
-                <h3>${component.name}</h3>
-                <p class="category">${capitalizeFirst(component.category)}</p>
-            </div>
-            <div class="card-actions">
-                <button class="card-btn get-code-btn" data-id="${component.id}">
-                    <i class="fas fa-code"></i>
-                    Get Code
-                </button>
-            </div>
-        </div>
+    // Preview Container (Light DOM - keeps grid background)
+    const previewContainer = document.createElement('div');
+    previewContainer.className = 'card-preview';
+    
+    // Shadow Host (Inside preview container)
+    const shadowHost = document.createElement('div');
+    shadowHost.style.width = '100%';
+    shadowHost.style.height = '100%';
+    shadowHost.style.display = 'flex';
+    shadowHost.style.alignItems = 'center';
+    shadowHost.style.justifyContent = 'center';
+    
+    const shadow = shadowHost.attachShadow({mode: 'open'});
+    shadow.innerHTML = `
+        <style>
+            /* Reset and Base Styles for Shadow DOM */
+            :host {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+            }
+            * { box-sizing: border-box; }
+            
+            /* Component CSS */
+            ${component.css}
+        </style>
+        ${component.html}
     `;
     
-    // Add click event for get code button
-    const getCodeBtn = card.querySelector('.get-code-btn');
+    previewContainer.appendChild(shadowHost);
+
+    // Info Container
+    const infoContainer = document.createElement('div');
+    infoContainer.className = 'card-info';
+    infoContainer.innerHTML = `
+        <div>
+            <h3>${component.name}</h3>
+            <p class="category">${capitalizeFirst(component.category)}</p>
+        </div>
+        <div class="card-actions">
+            <button class="card-btn codepen-btn" data-id="${component.id}" title="Open in CodePen">
+                <i class="fab fa-codepen"></i>
+            </button>
+            <button class="card-btn get-code-btn" data-id="${component.id}">
+                <i class="fas fa-code"></i>
+                Get Code
+            </button>
+        </div>
+    `;
+
+    card.appendChild(previewContainer);
+    card.appendChild(infoContainer);
+    
+    // Event Listeners
+    const codepenBtn = infoContainer.querySelector('.codepen-btn');
+    codepenBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openInCodePen(component);
+    });
+
+    const getCodeBtn = infoContainer.querySelector('.get-code-btn');
     getCodeBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         openModal(component);
@@ -135,13 +174,35 @@ function createComponentCard(component) {
     return card;
 }
 
-// Inject Component Styles (scoped)
-function injectComponentStyles(components) {
-    // Remove existing injected styles
-    const existingStyles = document.querySelectorAll('[data-component-style]');
-    existingStyles.forEach(style => style.remove());
+// Open in CodePen
+function openInCodePen(component) {
+    const data = {
+        title: component.name,
+        description: `A ${component.category} component from Shades By Jay`,
+        html: component.html,
+        css: component.css,
+        editors: "110", // Open HTML and CSS tabs
+        layout: "left",
+        tags: ["shades-by-jay", component.category, ...component.tags]
+    };
+
+    const form = document.createElement('form');
+    form.action = 'https://codepen.io/pen/define';
+    form.method = 'POST';
+    form.target = '_blank';
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'data';
+    input.value = JSON.stringify(data);
+
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
 }
 
+// Inject Component Styles (scoped)
 // Filter Components
 function filterComponents() {
     const searchTerm = searchInput.value.toLowerCase().trim();
@@ -165,11 +226,32 @@ function openModal(component) {
     currentComponent = component;
     modalTitle.textContent = component.name;
     
-    // Set preview with scoped styles
-    modalPreview.innerHTML = `
-        <style>${component.css}</style>
+    // Set preview with Shadow DOM
+    modalPreview.innerHTML = '';
+    const shadowHost = document.createElement('div');
+    shadowHost.style.width = '100%';
+    shadowHost.style.height = '100%';
+    shadowHost.style.display = 'flex';
+    shadowHost.style.alignItems = 'center';
+    shadowHost.style.justifyContent = 'center';
+    
+    const shadow = shadowHost.attachShadow({mode: 'open'});
+    shadow.innerHTML = `
+        <style>
+            :host {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+            }
+            * { box-sizing: border-box; }
+            ${component.css}
+        </style>
         ${component.html}
     `;
+    
+    modalPreview.appendChild(shadowHost);
     
     // Set code content
     htmlContent.textContent = formatCode(component.html);

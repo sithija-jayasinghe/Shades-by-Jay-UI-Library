@@ -533,6 +533,13 @@ button {
     box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
 }
 
+.codepen-btn:hover {
+    background: #1e1e1e; /* CodePen black */
+    border-color: #fff;
+    color: white;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.2);
+}
+
 .get-code-btn {
     padding: 0 1.25rem;
     width: auto;
