@@ -160,15 +160,18 @@ async function initAuth() {
             isSignUpMode = !isSignUpMode;
             const title = document.getElementById('authTitle');
             const submitBtn = emailAuthForm.querySelector('button[type="submit"]');
+            const nameField = document.getElementById('nameField');
             
             if (isSignUpMode) {
                 title.textContent = 'Create Account';
                 submitBtn.textContent = 'Sign Up';
                 toggleAuthMode.textContent = 'Sign In';
+                if (nameField) nameField.classList.remove('hidden');
             } else {
                 title.textContent = 'Welcome Back';
                 submitBtn.textContent = 'Sign In';
                 toggleAuthMode.textContent = 'Sign Up';
+                if (nameField) nameField.classList.add('hidden');
             }
         });
     }
@@ -178,12 +181,18 @@ async function initAuth() {
             e.preventDefault();
             const email = document.getElementById('emailInput').value;
             const password = document.getElementById('passwordInput').value;
+            const nameInput = document.getElementById('nameInput');
             
             try {
                 if (isSignUpMode) {
                     const { error } = await window.supabaseClient.auth.signUp({
                         email,
                         password,
+                        options: {
+                            data: {
+                                full_name: nameInput ? nameInput.value : ''
+                            }
+                        }
                     });
                     if (error) throw error;
                     showToast('Check your email for confirmation link!');
