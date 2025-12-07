@@ -27,9 +27,14 @@
                 <a href="#" class="nav-link" data-category="switches">Switches</a>
                 <a href="#" class="nav-link" data-category="inputs">Inputs</a>
                 <a href="#" class="nav-link" data-category="forms">Forms</a>
+                <a href="#" class="nav-link" data-category="templates">Templates</a>
                 <a href="submit.html" class="nav-link" style="color: var(--accent-color); font-weight: bold;">Submit</a>
             </div>
             <div class="nav-actions">
+                <button class="nav-btn favorites-btn hidden" id="favoritesBtn" title="My Favorites">
+                    <i class="fas fa-bookmark"></i>
+                    <span class="favorites-count" id="favoritesCount">0</span>
+                </button>
                 <div class="search-box">
                     <i class="fas fa-search"></i>
                     <input type="text" id="searchInput" placeholder="Search components...">
@@ -66,8 +71,8 @@
                     <span class="stat-label">Loaders</span>
                 </div>
                 <div class="stat">
-                    <span class="stat-number" id="3dStats">75+</span>
-                    <span class="stat-label">3D Elements</span>
+                    <span class="stat-number" id="templateStats">5+</span>
+                    <span class="stat-label">Templates</span>
                 </div>
                 <div class="stat">
                     <span class="stat-number">MIT</span>
@@ -98,6 +103,9 @@
             <span class="tag" data-tag="glassmorphism">Glass</span>
             <span class="tag" data-tag="neumorphism">Neumorphism</span>
             <span class="tag" data-tag="retro">🕹️ Retro</span>
+            <span class="tag" data-tag="template">📄 Templates</span>
+            <span class="tag" data-tag="landing">🚀 Landing</span>
+            <span class="tag" data-tag="dashboard">📊 Dashboard</span>
         </div>
     </section>
 
@@ -151,6 +159,25 @@
     <div class="toast" id="toast">
         <i class="fas fa-check-circle"></i>
         <span>Copied to clipboard!</span>
+    </div>
+
+    <!-- Favorites Modal -->
+    <div class="modal" id="favoritesModal">
+        <div class="modal-content favorites-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-bookmark"></i> My Saved Components</h2>
+                <button class="modal-close" id="favoritesClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="favorites-body" id="favoritesBody">
+                <div class="favorites-empty">
+                    <i class="far fa-bookmark"></i>
+                    <p>No saved components yet</p>
+                    <span>Click the bookmark icon on any component to save it here</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Footer -->
@@ -237,6 +264,7 @@
     <script src="js/components-loaders.js"></script>
     <script src="js/components-switches.js"></script>
     <script src="js/components-3d-cards.js"></script>
+    <script src="js/components-templates.js"></script>
     <script src="js/app.js"></script>
     
     <script>

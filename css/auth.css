@@ -8,9 +8,10 @@
    Auth & User Profile
    ============================================ */
 .nav-btn {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.875rem;
     border-radius: var(--radius);
     font-weight: 500;
+    font-size: 0.85rem;
     cursor: pointer;
     transition: var(--transition);
     border: 1px solid var(--border-color);
@@ -19,7 +20,9 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    height: 43px;
+    height: 38px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .nav-btn:hover {
@@ -194,6 +197,7 @@
 
 /* Like Button */
 .like-btn {
+    width: 50px;
     color: var(--text-muted);
     transition: var(--transition);
 }
@@ -218,3 +222,221 @@
     font-size: 0.8rem;
     margin-left: 4px;
 }
+
+/* ============================================
+   Favorites Button (Nav)
+   ============================================ */
+.favorites-btn {
+    position: relative;
+    padding: 0.5rem 0.65rem;
+    flex-shrink: 0;
+}
+
+.favorites-btn i {
+    font-size: 1rem;
+}
+
+.favorites-count {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--primary);
+    color: white;
+    font-size: 0.65rem;
+    font-weight: 600;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ============================================
+   Save/Bookmark Button
+   ============================================ */
+.save-btn {
+    width: 40px;
+    color: var(--text-muted);
+    transition: var(--transition);
+}
+
+.save-btn:hover {
+    color: var(--primary);
+    background: rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.2);
+}
+
+.save-btn.saved {
+    color: var(--primary);
+    background: rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.2);
+}
+
+/* ============================================
+   Creator Credits
+   ============================================ */
+.card-info-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    gap: 0.5rem;
+}
+
+.creator-credit {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    background: var(--bg-elevated);
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    transition: var(--transition);
+    flex-shrink: 0;
+}
+
+.creator-credit:hover {
+    background: var(--bg-card);
+    border-color: var(--primary);
+}
+
+.creator-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.creator-name {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    max-width: 80px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* ============================================
+   Favorites Modal
+   ============================================ */
+.favorites-content {
+    max-width: 800px;
+    max-height: 80vh;
+}
+
+.favorites-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    max-height: 60vh;
+}
+
+.favorites-empty {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-muted);
+}
+
+.favorites-empty i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.favorites-empty p {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-secondary);
+}
+
+.favorites-empty span {
+    font-size: 0.9rem;
+}
+
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.favorite-item {
+    background: var(--bg-elevated);
+    border-radius: var(--radius);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+}
+
+.favorite-item:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+}
+
+.favorite-preview {
+    height: 100px;
+    background: var(--bg-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.favorite-shadow-host {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.favorite-info {
+    padding: 0.75rem;
+}
+
+.favorite-info h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.25rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.favorite-info span {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.favorite-actions {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0 0.75rem 0.75rem;
+}
+
+.fav-action-btn {
+    flex: 1;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.fav-action-btn:hover {
+    background: var(--bg-elevated);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.fav-action-btn.remove-btn:hover {
+    border-color: #ef4444;
+    color: #ef4444;
+}
+

@@ -32,6 +32,13 @@ const googleLogin = document.getElementById('googleLogin');
 const emailAuthForm = document.getElementById('emailAuthForm');
 const toggleAuthMode = document.getElementById('toggleAuthMode');
 
+// Favorites DOM Elements
+const favoritesBtn = document.getElementById('favoritesBtn');
+const favoritesCount = document.getElementById('favoritesCount');
+const favoritesModal = document.getElementById('favoritesModal');
+const favoritesClose = document.getElementById('favoritesClose');
+const favoritesBody = document.getElementById('favoritesBody');
+
 // Merge all component arrays into one
 const allComponents = [
     ...(typeof uiComponents !== 'undefined' ? uiComponents : []),
@@ -42,7 +49,8 @@ const allComponents = [
     ...(typeof retroComponents !== 'undefined' ? retroComponents : []),
     ...(typeof loaderComponents !== 'undefined' ? loaderComponents : []),
     ...(typeof switchComponents !== 'undefined' ? switchComponents : []),
-    ...(typeof threeDCardComponents !== 'undefined' ? threeDCardComponents : [])
+    ...(typeof threeDCardComponents !== 'undefined' ? threeDCardComponents : []),
+    ...(typeof templateComponents !== 'undefined' ? templateComponents : [])
 ];
 
 // State
@@ -52,6 +60,8 @@ let currentComponent = null;
 let currentUser = null;
 let userLikes = new Set(); // Set of component IDs liked by user
 let likeCounts = {}; // Map of component ID -> count
+let userFavorites = new Set(); // Set of component IDs saved by user
+let showingFavorites = false; // Whether we're showing the favorites view
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
@@ -223,6 +233,28 @@ async function initAuth() {
 
     // Fetch initial likes data
     await fetchLikes();
+
+    // Favorites Modal Event Listeners
+    if (favoritesBtn) {
+        favoritesBtn.addEventListener('click', () => {
+            renderFavoritesModal();
+            favoritesModal.classList.add('active');
+        });
+    }
+    
+    if (favoritesClose) {
+        favoritesClose.addEventListener('click', () => {
+            favoritesModal.classList.remove('active');
+        });
+    }
+    
+    if (favoritesModal) {
+        favoritesModal.addEventListener('click', (e) => {
+            if (e.target === favoritesModal) {
+                favoritesModal.classList.remove('active');
+            }
+        });
+    }
 }
 
 function updateAuthUI(user) {
@@ -231,17 +263,23 @@ function updateAuthUI(user) {
     if (user) {
         authBtn.classList.add('hidden');
         userProfile.classList.remove('hidden');
+        if (favoritesBtn) favoritesBtn.classList.remove('hidden');
         userName.textContent = user.user_metadata.full_name || user.email.split('@')[0];
         userAvatar.src = user.user_metadata.avatar_url || `https://ui-avatars.com/api/?name=${userName.textContent}&background=random`;
         
-        // Refresh likes to show "liked" status
-        fetchLikes().then(() => renderComponents(allComponents)); // Re-render to update hearts
+        // Refresh likes and favorites
+        Promise.all([fetchLikes(), fetchFavorites()]).then(() => {
+            filterComponents(); // Re-render to update UI
+        });
         authModal.classList.remove('active');
     } else {
         authBtn.classList.remove('hidden');
         userProfile.classList.add('hidden');
+        if (favoritesBtn) favoritesBtn.classList.add('hidden');
         userLikes.clear();
-        renderComponents(allComponents); // Re-render to remove hearts
+        userFavorites.clear();
+        updateFavoritesCount();
+        filterComponents(); // Re-render to remove states
     }
 }
 
@@ -309,6 +347,130 @@ async function toggleLike(componentId, btnElement) {
     }
 }
 
+// ==================== FAVORITES LOGIC ====================
+
+async function fetchFavorites() {
+    if (!window.supabaseClient || !currentUser) return;
+
+    const { data: favoritesData, error } = await window.supabaseClient
+        .from('favorites')
+        .select('component_id')
+        .eq('user_id', currentUser.id);
+        
+    if (!error && favoritesData) {
+        userFavorites = new Set(favoritesData.map(f => f.component_id));
+        updateFavoritesCount();
+    }
+}
+
+function updateFavoritesCount() {
+    if (favoritesCount) {
+        favoritesCount.textContent = userFavorites.size;
+    }
+}
+
+async function toggleFavorite(componentId, btnElement) {
+    if (!currentUser) {
+        authModal.classList.add('active');
+        return;
+    }
+
+    const isSaved = userFavorites.has(componentId);
+    const icon = btnElement.querySelector('i');
+
+    // Optimistic UI Update
+    if (isSaved) {
+        userFavorites.delete(componentId);
+        btnElement.classList.remove('saved');
+        icon.classList.replace('fas', 'far');
+        showToast('Removed from saved');
+        
+        await window.supabaseClient
+            .from('favorites')
+            .delete()
+            .match({ user_id: currentUser.id, component_id: componentId });
+    } else {
+        userFavorites.add(componentId);
+        btnElement.classList.add('saved');
+        icon.classList.replace('far', 'fas');
+        showToast('Saved to collection!');
+
+        await window.supabaseClient
+            .from('favorites')
+            .insert({ user_id: currentUser.id, component_id: componentId });
+    }
+    
+    updateFavoritesCount();
+}
+
+function renderFavoritesModal() {
+    if (!favoritesBody) return;
+    
+    const favoriteComponents = allComponents.filter(c => userFavorites.has(c.id));
+    
+    if (favoriteComponents.length === 0) {
+        favoritesBody.innerHTML = `
+            <div class="favorites-empty">
+                <i class="far fa-bookmark"></i>
+                <p>No saved components yet</p>
+                <span>Click the bookmark icon on any component to save it here</span>
+            </div>
+        `;
+        return;
+    }
+    
+    favoritesBody.innerHTML = '<div class="favorites-grid"></div>';
+    const grid = favoritesBody.querySelector('.favorites-grid');
+    
+    favoriteComponents.forEach(component => {
+        const item = document.createElement('div');
+        item.className = 'favorite-item';
+        item.innerHTML = `
+            <div class="favorite-preview">
+                <div class="favorite-shadow-host"></div>
+            </div>
+            <div class="favorite-info">
+                <h4>${component.name}</h4>
+                <span>${capitalizeFirst(component.category)}</span>
+            </div>
+            <div class="favorite-actions">
+                <button class="fav-action-btn view-btn" data-id="${component.id}" title="View Code">
+                    <i class="fas fa-code"></i>
+                </button>
+                <button class="fav-action-btn remove-btn" data-id="${component.id}" title="Remove">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
+        
+        // Add shadow DOM preview
+        const shadowHost = item.querySelector('.favorite-shadow-host');
+        const shadow = shadowHost.attachShadow({mode: 'open'});
+        shadow.innerHTML = `
+            <style>
+                :host { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; transform: scale(0.5); }
+                * { box-sizing: border-box; }
+                ${component.css}
+            </style>
+            ${component.html}
+        `;
+        
+        // Event listeners
+        item.querySelector('.view-btn').addEventListener('click', () => {
+            favoritesModal.classList.remove('active');
+            openModal(component);
+        });
+        
+        item.querySelector('.remove-btn').addEventListener('click', async () => {
+            await toggleFavorite(component.id, document.querySelector(`.save-btn[data-id="${component.id}"]`) || item);
+            renderFavoritesModal();
+            filterComponents(); // Re-render main grid
+        });
+        
+        grid.appendChild(item);
+    });
+}
+
 // Create Component Card
 function createComponentCard(component) {
     const card = document.createElement('div');
@@ -353,15 +515,30 @@ function createComponentCard(component) {
     // Info Container
     const isLiked = userLikes.has(component.id);
     const likeCount = likeCounts[component.id] || 0;
+    const isSaved = userFavorites.has(component.id);
+
+    // Creator info
+    const creatorName = component.creator_name || component.creatorName || 'Community';
+    const creatorAvatar = component.creator_avatar || component.creatorAvatar || `https://ui-avatars.com/api/?name=${creatorName}&background=8b5cf6&color=fff&size=24`;
+    const creatorUrl = component.creator_url || component.creatorUrl || '#';
 
     const infoContainer = document.createElement('div');
     infoContainer.className = 'card-info';
     infoContainer.innerHTML = `
-        <div>
-            <h3>${component.name}</h3>
-            <p class="category">${capitalizeFirst(component.category)}</p>
+        <div class="card-info-top">
+            <div>
+                <h3>${component.name}</h3>
+                <p class="category">${capitalizeFirst(component.category)}</p>
+            </div>
+            <a href="${creatorUrl}" class="creator-credit" target="_blank" title="Created by ${creatorName}">
+                <img src="${creatorAvatar}" alt="${creatorName}" class="creator-avatar">
+                <span class="creator-name">${creatorName}</span>
+            </a>
         </div>
         <div class="card-actions">
+            <button class="card-btn save-btn ${isSaved ? 'saved' : ''}" data-id="${component.id}" title="${isSaved ? 'Remove from Saved' : 'Save Component'}">
+                <i class="${isSaved ? 'fas' : 'far'} fa-bookmark"></i>
+            </button>
             <button class="card-btn like-btn ${isLiked ? 'liked' : ''}" data-id="${component.id}" title="Like">
                 <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
                 <span class="like-count">${likeCount}</span>
@@ -380,6 +557,12 @@ function createComponentCard(component) {
     card.appendChild(infoContainer);
     
     // Event Listeners
+    const saveBtn = infoContainer.querySelector('.save-btn');
+    saveBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleFavorite(component.id, saveBtn);
+    });
+
     const likeBtn = infoContainer.querySelector('.like-btn');
     likeBtn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -671,5 +854,14 @@ function updateStats() {
             (c.tags && c.tags.includes('3d')) || (c.tags && c.tags.includes('3D'))
         ).length;
         threeDEl.textContent = threeDCount + '+';
+    }
+
+    // Update template count if element exists
+    const templateEl = document.getElementById('templateStats');
+    if (templateEl) {
+        const templateCount = allComponents.filter(c => 
+            c.category === 'templates' || (c.tags && c.tags.includes('template'))
+        ).length;
+        templateEl.textContent = templateCount + '+';
     }
 }

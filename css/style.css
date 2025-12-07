@@ -108,24 +108,25 @@ button {
 }
 
 .nav-container {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 0 2rem;
+    padding: 0 1rem;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 2rem;
+    gap: 1rem;
 }
 
 .logo {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    font-size: 1.35rem;
+    gap: 0.5rem;
+    font-size: 1.2rem;
     font-weight: 700;
     letter-spacing: -0.02em;
     color: var(--text-primary);
     transition: var(--transition);
+    flex-shrink: 0;
 }
 
 .logo:hover {
@@ -148,15 +149,24 @@ button {
     padding: 0.25rem;
     border-radius: var(--radius);
     border: 1px solid var(--border-color);
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.nav-links::-webkit-scrollbar {
+    display: none;
 }
 
 .nav-link {
-    padding: 0.5rem 1rem;
+    padding: 0.5rem 0.75rem;
     border-radius: calc(var(--radius) - 4px);
     color: var(--text-muted);
     font-weight: 500;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     transition: var(--transition);
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .nav-link:hover {
@@ -171,7 +181,8 @@ button {
 .nav-actions {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
+    flex-shrink: 0;
 }
 
 .search-box {
@@ -188,13 +199,13 @@ button {
 }
 
 .search-box input {
-    width: 250px;
-    padding: 0.75rem 1rem 0.75rem 2.75rem;
+    width: 180px;
+    padding: 0.65rem 0.75rem 0.65rem 2.5rem;
     background: var(--bg-card);
     border: 1px solid var(--border-color);
     border-radius: var(--radius);
     color: var(--text-primary);
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     transition: var(--transition);
 }
 
@@ -210,8 +221,8 @@ button {
 }
 
 .theme-toggle {
-    width: 44px;
-    height: 44px;
+    width: 38px;
+    height: 38px;
     border-radius: var(--radius);
     background: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -220,6 +231,7 @@ button {
     align-items: center;
     justify-content: center;
     transition: var(--transition);
+    flex-shrink: 0;
 }
 
 .theme-toggle:hover {
@@ -489,10 +501,9 @@ button {
 }
 
 .card-info {
-    padding: 1.25rem 1.5rem;
+    padding: 1rem 1.25rem;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
     border-top: 1px solid var(--border-color);
     background: var(--bg-card);
 }
