@@ -188,7 +188,7 @@ button {
 }
 
 .search-box input {
-    width: 280px;
+    width: 250px;
     padding: 0.75rem 1rem 0.75rem 2.75rem;
     background: var(--bg-card);
     border: 1px solid var(--border-color);
