@@ -19,6 +19,19 @@ const codeBlocks = document.querySelectorAll('.code-block');
 const copyButtons = document.querySelectorAll('.copy-btn');
 const toast = document.getElementById('toast');
 
+// Auth DOM Elements
+const authBtn = document.getElementById('authBtn');
+const userProfile = document.getElementById('userProfile');
+const userAvatar = document.getElementById('userAvatar');
+const userName = document.getElementById('userName');
+const logoutBtn = document.getElementById('logoutBtn');
+const authModal = document.getElementById('authModal');
+const authClose = document.getElementById('authClose');
+const githubLogin = document.getElementById('githubLogin');
+const googleLogin = document.getElementById('googleLogin');
+const emailAuthForm = document.getElementById('emailAuthForm');
+const toggleAuthMode = document.getElementById('toggleAuthMode');
+
 // Merge all component arrays into one
 const allComponents = [
     ...(typeof uiComponents !== 'undefined' ? uiComponents : []),
@@ -36,9 +49,15 @@ const allComponents = [
 let currentCategory = 'all';
 let currentTag = 'all';
 let currentComponent = null;
+let currentUser = null;
+let userLikes = new Set(); // Set of component IDs liked by user
+let likeCounts = {}; // Map of component ID -> count
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
+    // Initialize Auth
+    await initAuth();
+
     // Load static components first
     renderComponents(allComponents);
     
@@ -95,6 +114,182 @@ function renderComponents(components) {
     });
 }
 
+// ==================== AUTHENTICATION LOGIC ====================
+
+async function initAuth() {
+    if (!window.supabaseClient) return;
+
+    // Check initial session
+    const { data: { session } } = await window.supabaseClient.auth.getSession();
+    updateAuthUI(session?.user);
+
+    // Listen for auth changes
+    window.supabaseClient.auth.onAuthStateChange((_event, session) => {
+        updateAuthUI(session?.user);
+    });
+
+    // Event Listeners
+    if (authBtn) authBtn.addEventListener('click', () => authModal.classList.add('active'));
+    if (authClose) authClose.addEventListener('click', () => authModal.classList.remove('active'));
+    
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+            await window.supabaseClient.auth.signOut();
+            showToast('Logged out successfully');
+        });
+    }
+
+    if (githubLogin) {
+        githubLogin.addEventListener('click', async () => {
+            await window.supabaseClient.auth.signInWithOAuth({ provider: 'github' });
+        });
+    }
+
+    if (googleLogin) {
+        googleLogin.addEventListener('click', async () => {
+            await window.supabaseClient.auth.signInWithOAuth({ provider: 'google' });
+        });
+    }
+
+    // Email Auth Logic
+    let isSignUpMode = false;
+    
+    if (toggleAuthMode) {
+        toggleAuthMode.addEventListener('click', (e) => {
+            e.preventDefault();
+            isSignUpMode = !isSignUpMode;
+            const title = document.getElementById('authTitle');
+            const submitBtn = emailAuthForm.querySelector('button[type="submit"]');
+            
+            if (isSignUpMode) {
+                title.textContent = 'Create Account';
+                submitBtn.textContent = 'Sign Up';
+                toggleAuthMode.textContent = 'Sign In';
+            } else {
+                title.textContent = 'Welcome Back';
+                submitBtn.textContent = 'Sign In';
+                toggleAuthMode.textContent = 'Sign Up';
+            }
+        });
+    }
+
+    if (emailAuthForm) {
+        emailAuthForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('emailInput').value;
+            const password = document.getElementById('passwordInput').value;
+            
+            try {
+                if (isSignUpMode) {
+                    const { error } = await window.supabaseClient.auth.signUp({
+                        email,
+                        password,
+                    });
+                    if (error) throw error;
+                    showToast('Check your email for confirmation link!');
+                } else {
+                    const { error } = await window.supabaseClient.auth.signInWithPassword({
+                        email,
+                        password,
+                    });
+                    if (error) throw error;
+                    showToast('Signed in successfully!');
+                }
+                authModal.classList.remove('active');
+            } catch (error) {
+                showToast(error.message, 'error');
+            }
+        });
+    }
+
+    // Fetch initial likes data
+    await fetchLikes();
+}
+
+function updateAuthUI(user) {
+    currentUser = user;
+    
+    if (user) {
+        authBtn.classList.add('hidden');
+        userProfile.classList.remove('hidden');
+        userName.textContent = user.user_metadata.full_name || user.email.split('@')[0];
+        userAvatar.src = user.user_metadata.avatar_url || `https://ui-avatars.com/api/?name=${userName.textContent}&background=random`;
+        
+        // Refresh likes to show "liked" status
+        fetchLikes().then(() => renderComponents(allComponents)); // Re-render to update hearts
+        authModal.classList.remove('active');
+    } else {
+        authBtn.classList.remove('hidden');
+        userProfile.classList.add('hidden');
+        userLikes.clear();
+        renderComponents(allComponents); // Re-render to remove hearts
+    }
+}
+
+// ==================== LIKES LOGIC ====================
+
+async function fetchLikes() {
+    if (!window.supabaseClient) return;
+
+    // Get all likes counts
+    const { data: counts, error: countError } = await window.supabaseClient
+        .from('likes')
+        .select('component_id');
+    
+    if (!countError && counts) {
+        likeCounts = {};
+        counts.forEach(like => {
+            likeCounts[like.component_id] = (likeCounts[like.component_id] || 0) + 1;
+        });
+    }
+
+    // Get user's likes if logged in
+    if (currentUser) {
+        const { data: userLikesData, error: userError } = await window.supabaseClient
+            .from('likes')
+            .select('component_id')
+            .eq('user_id', currentUser.id);
+            
+        if (!userError && userLikesData) {
+            userLikes = new Set(userLikesData.map(l => l.component_id));
+        }
+    }
+}
+
+async function toggleLike(componentId, btnElement) {
+    if (!currentUser) {
+        authModal.classList.add('active');
+        return;
+    }
+
+    const isLiked = userLikes.has(componentId);
+    const icon = btnElement.querySelector('i');
+    const countSpan = btnElement.querySelector('.like-count');
+    let currentCount = parseInt(countSpan.textContent) || 0;
+
+    // Optimistic UI Update
+    if (isLiked) {
+        userLikes.delete(componentId);
+        btnElement.classList.remove('liked');
+        icon.classList.replace('fas', 'far');
+        countSpan.textContent = Math.max(0, currentCount - 1);
+        
+        await window.supabaseClient
+            .from('likes')
+            .delete()
+            .match({ user_id: currentUser.id, component_id: componentId });
+    } else {
+        userLikes.add(componentId);
+        btnElement.classList.add('liked');
+        icon.classList.replace('far', 'fas');
+        countSpan.textContent = currentCount + 1;
+
+        await window.supabaseClient
+            .from('likes')
+            .insert({ user_id: currentUser.id, component_id: componentId });
+    }
+}
+
 // Create Component Card
 function createComponentCard(component) {
     const card = document.createElement('div');
@@ -137,6 +332,9 @@ function createComponentCard(component) {
     previewContainer.appendChild(shadowHost);
 
     // Info Container
+    const isLiked = userLikes.has(component.id);
+    const likeCount = likeCounts[component.id] || 0;
+
     const infoContainer = document.createElement('div');
     infoContainer.className = 'card-info';
     infoContainer.innerHTML = `
@@ -145,6 +343,10 @@ function createComponentCard(component) {
             <p class="category">${capitalizeFirst(component.category)}</p>
         </div>
         <div class="card-actions">
+            <button class="card-btn like-btn ${isLiked ? 'liked' : ''}" data-id="${component.id}" title="Like">
+                <i class="${isLiked ? 'fas' : 'far'} fa-heart"></i>
+                <span class="like-count">${likeCount}</span>
+            </button>
             <button class="card-btn codepen-btn" data-id="${component.id}" title="Open in CodePen">
                 <i class="fab fa-codepen"></i>
             </button>
@@ -159,6 +361,12 @@ function createComponentCard(component) {
     card.appendChild(infoContainer);
     
     // Event Listeners
+    const likeBtn = infoContainer.querySelector('.like-btn');
+    likeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleLike(component.id, likeBtn);
+    });
+
     const codepenBtn = infoContainer.querySelector('.codepen-btn');
     codepenBtn.addEventListener('click', (e) => {
         e.stopPropagation();
