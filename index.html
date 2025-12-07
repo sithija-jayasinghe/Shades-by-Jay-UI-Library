@@ -118,18 +118,12 @@
 
     <!-- Code Modal -->
     <div class="modal" id="codeModal">
-        <div class="modal-content code-modal-content">
+        <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">Component Name</h2>
-                <div class="modal-header-actions">
-                    <button class="mode-toggle-btn" id="modeToggle" title="Toggle Edit Mode">
-                        <i class="fas fa-play"></i>
-                        <span>Playground</span>
-                    </button>
-                    <button class="modal-close" id="modalClose">
-                        <i class="fas fa-times"></i>
-                    </button>
-                </div>
+                <button class="modal-close" id="modalClose">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
             <div class="modal-preview" id="modalPreview">
                 <!-- Live preview will be shown here -->
@@ -142,36 +136,20 @@
                 <div class="code-block active" id="htmlCode">
                     <div class="code-header">
                         <span>HTML</span>
-                        <div class="code-header-actions">
-                            <button class="reset-btn" id="resetHtml" title="Reset to Original">
-                                <i class="fas fa-undo"></i>
-                            </button>
-                            <button class="copy-btn" data-type="html">
-                                <i class="fas fa-copy"></i> Copy
-                            </button>
-                        </div>
+                        <button class="copy-btn" data-type="html">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
                     </div>
-                    <div class="code-display">
-                        <pre><code id="htmlContent"></code></pre>
-                        <textarea id="htmlEditor" class="code-editor" spellcheck="false"></textarea>
-                    </div>
+                    <pre><code id="htmlContent"></code></pre>
                 </div>
                 <div class="code-block" id="cssCode">
                     <div class="code-header">
                         <span>CSS</span>
-                        <div class="code-header-actions">
-                            <button class="reset-btn" id="resetCss" title="Reset to Original">
-                                <i class="fas fa-undo"></i>
-                            </button>
-                            <button class="copy-btn" data-type="css">
-                                <i class="fas fa-copy"></i> Copy
-                            </button>
-                        </div>
+                        <button class="copy-btn" data-type="css">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
                     </div>
-                    <div class="code-display">
-                        <pre><code id="cssContent"></code></pre>
-                        <textarea id="cssEditor" class="code-editor" spellcheck="false"></textarea>
-                    </div>
+                    <pre><code id="cssContent"></code></pre>
                 </div>
             </div>
         </div>

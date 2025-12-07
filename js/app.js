@@ -39,13 +39,6 @@ const favoritesModal = document.getElementById('favoritesModal');
 const favoritesClose = document.getElementById('favoritesClose');
 const favoritesBody = document.getElementById('favoritesBody');
 
-// Playground DOM Elements
-const modeToggle = document.getElementById('modeToggle');
-const htmlEditor = document.getElementById('htmlEditor');
-const cssEditor = document.getElementById('cssEditor');
-const resetHtmlBtn = document.getElementById('resetHtml');
-const resetCssBtn = document.getElementById('resetCss');
-
 // Merge all component arrays into one
 const allComponents = [
     ...(typeof uiComponents !== 'undefined' ? uiComponents : []),
