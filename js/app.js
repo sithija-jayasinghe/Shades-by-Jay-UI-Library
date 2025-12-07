@@ -141,13 +141,23 @@ async function initAuth() {
 
     if (githubLogin) {
         githubLogin.addEventListener('click', async () => {
-            await window.supabaseClient.auth.signInWithOAuth({ provider: 'github' });
+            await window.supabaseClient.auth.signInWithOAuth({ 
+                provider: 'github',
+                options: {
+                    redirectTo: window.location.href
+                }
+            });
         });
     }
 
     if (googleLogin) {
         googleLogin.addEventListener('click', async () => {
-            await window.supabaseClient.auth.signInWithOAuth({ provider: 'google' });
+            await window.supabaseClient.auth.signInWithOAuth({ 
+                provider: 'google',
+                options: {
+                    redirectTo: window.location.href
+                }
+            });
         });
     }
 
