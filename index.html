@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/auth.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -36,6 +37,16 @@
                 <button class="theme-toggle" id="themeToggle">
                     <i class="fas fa-moon"></i>
                 </button>
+                <button id="authBtn" class="nav-btn auth-btn">
+                    <i class="fas fa-user"></i> Login
+                </button>
+                <div id="userProfile" class="user-profile hidden">
+                    <img id="userAvatar" src="" alt="User" class="user-avatar">
+                    <div class="user-dropdown">
+                        <span id="userName">User</span>
+                        <button id="logoutBtn">Logout</button>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
@@ -177,6 +188,40 @@
             <p>&copy; 2025 Shades By Jay. Open Source with ❤️</p>
         </div>
     </footer>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="authModal">
+        <div class="modal-content auth-content">
+            <div class="modal-header">
+                <h2 id="authTitle">Welcome Back</h2>
+                <button class="modal-close" id="authClose">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="auth-body">
+                <p class="auth-desc">Sign in to save your favorite components and join the community.</p>
+                <button id="githubLogin" class="social-btn github">
+                    <i class="fab fa-github"></i> Continue with GitHub
+                </button>
+                <button id="googleLogin" class="social-btn google">
+                    <i class="fab fa-google"></i> Continue with Google
+                </button>
+                <div class="divider"><span>OR</span></div>
+                <form id="emailAuthForm">
+                    <div class="form-group">
+                        <input type="email" id="emailInput" placeholder="Email address" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="passwordInput" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="submit-btn full-width">Sign In</button>
+                </form>
+                <p class="auth-footer">
+                    Don't have an account? <a href="#" id="toggleAuthMode">Sign Up</a>
+                </p>
+            </div>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-config.js"></script>
