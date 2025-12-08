@@ -667,6 +667,11 @@ function openModal(component) {
     htmlContent.textContent = formatCode(component.html);
     cssContent.textContent = formatCode(component.css);
     
+    // Initialize Playground with original code
+    if (typeof setPlaygroundOriginalCode === 'function') {
+        setPlaygroundOriginalCode(component.html, component.css);
+    }
+    
     // Reset to HTML tab
     codeTabs.forEach(tab => tab.classList.remove('active'));
     codeBlocks.forEach(block => block.classList.remove('active'));
@@ -681,6 +686,7 @@ function openModal(component) {
 // Close Modal
 function closeModal() {
     modal.classList.remove('active');
+    modal.classList.remove('playground-active'); // Also remove playground mode
     document.body.style.overflow = '';
     currentComponent = null;
 }

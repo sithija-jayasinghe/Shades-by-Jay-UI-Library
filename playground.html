@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playground - Shades By Jay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/playground-page.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="pg-header">
+        <div class="pg-header-left">
+            <a href="index.html" class="pg-back-btn" title="Back to Library">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div class="pg-logo">
+                <i class="fas fa-cube"></i>
+                <span>Playground</span>
+            </div>
+            <div class="pg-component-name" id="componentName">
+                <input type="text" id="projectName" value="Untitled Component" placeholder="Component name...">
+            </div>
+        </div>
+        <div class="pg-header-center">
+            <div class="pg-layout-switcher">
+                <button class="pg-layout-btn active" data-layout="horizontal" title="Horizontal Layout">
+                    <i class="fas fa-columns"></i>
+                </button>
+                <button class="pg-layout-btn" data-layout="vertical" title="Vertical Layout">
+                    <i class="fas fa-layer-group"></i>
+                </button>
+                <button class="pg-layout-btn" data-layout="preview-only" title="Preview Only">
+                    <i class="fas fa-expand"></i>
+                </button>
+            </div>
+        </div>
+        <div class="pg-header-right">
+            <button class="pg-action-btn" id="resetBtn" title="Reset Code">
+                <i class="fas fa-undo"></i>
+                <span>Reset</span>
+            </button>
+            <button class="pg-action-btn" id="downloadBtn" title="Download Files">
+                <i class="fas fa-download"></i>
+                <span>Download</span>
+            </button>
+            <button class="pg-action-btn primary" id="codepenBtn" title="Open in CodePen">
+                <i class="fab fa-codepen"></i>
+                <span>CodePen</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Playground Area -->
+    <main class="pg-main" data-layout="horizontal">
+        <!-- Editors Panel -->
+        <div class="pg-editors">
+            <!-- HTML Editor -->
+            <div class="pg-editor-panel" id="htmlPanel">
+                <div class="pg-editor-header">
+                    <div class="pg-editor-title">
+                        <i class="fab fa-html5"></i>
+                        <span>HTML</span>
+                    </div>
+                    <div class="pg-editor-actions">
+                        <button class="pg-editor-btn" id="formatHtml" title="Format Code">
+                            <i class="fas fa-magic"></i>
+                        </button>
+                        <button class="pg-editor-btn" id="copyHtml" title="Copy Code">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button class="pg-editor-btn minimize-btn" data-panel="html" title="Minimize">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="pg-editor-body">
+                    <div class="pg-line-numbers" id="htmlLineNumbers"></div>
+                    <textarea id="htmlEditor" class="pg-code-editor" spellcheck="false" placeholder="<!-- Write your HTML here -->"></textarea>
+                </div>
+            </div>
+
+            <!-- CSS Editor -->
+            <div class="pg-editor-panel" id="cssPanel">
+                <div class="pg-editor-header css-header">
+                    <div class="pg-editor-title">
+                        <i class="fab fa-css3-alt"></i>
+                        <span>CSS</span>
+                    </div>
+                    <div class="pg-editor-actions">
+                        <button class="pg-editor-btn" id="formatCss" title="Format Code">
+                            <i class="fas fa-magic"></i>
+                        </button>
+                        <button class="pg-editor-btn" id="copyCss" title="Copy Code">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                        <button class="pg-editor-btn minimize-btn" data-panel="css" title="Minimize">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="pg-editor-body">
+                    <div class="pg-line-numbers" id="cssLineNumbers"></div>
+                    <textarea id="cssEditor" class="pg-code-editor" spellcheck="false" placeholder="/* Write your CSS here */"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resizer -->
+        <div class="pg-resizer" id="resizer">
+            <div class="pg-resizer-line"></div>
+        </div>
+
+        <!-- Preview Panel -->
+        <div class="pg-preview-panel">
+            <div class="pg-preview-header">
+                <div class="pg-preview-title">
+                    <i class="fas fa-eye"></i>
+                    <span>Preview</span>
+                </div>
+                <div class="pg-preview-actions">
+                    <button class="pg-editor-btn" id="refreshPreview" title="Refresh Preview">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <div class="pg-preview-size">
+                        <button class="pg-size-btn active" data-size="100" title="100%">1x</button>
+                        <button class="pg-size-btn" data-size="75" title="75%">0.75x</button>
+                        <button class="pg-size-btn" data-size="50" title="50%">0.5x</button>
+                    </div>
+                </div>
+            </div>
+            <div class="pg-preview-body">
+                <div class="pg-preview-container" id="previewContainer">
+                    <!-- Preview rendered here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Status Bar -->
+    <footer class="pg-status-bar">
+        <div class="pg-status-left">
+            <span class="pg-status-item">
+                <i class="fas fa-circle pg-status-dot"></i>
+                Live Preview
+            </span>
+            <span class="pg-status-item" id="htmlCharCount">HTML: 0 chars</span>
+            <span class="pg-status-item" id="cssCharCount">CSS: 0 chars</span>
+        </div>
+        <div class="pg-status-right">
+            <span class="pg-status-item">
+                <i class="fas fa-keyboard"></i>
+                Tab = 2 spaces
+            </span>
+            <span class="pg-status-item">
+                Auto-save: <span id="autoSaveStatus">On</span>
+            </span>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div class="pg-toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">Copied to clipboard!</span>
+    </div>
+
+    <script src="js/playground-page.js"></script>
+</body>
+</html>

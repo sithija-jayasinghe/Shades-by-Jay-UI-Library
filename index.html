@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/playground.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -28,6 +29,7 @@
                 <a href="#" class="nav-link" data-category="inputs">Inputs</a>
                 <a href="#" class="nav-link" data-category="forms">Forms</a>
                 <a href="#" class="nav-link" data-category="templates">Templates</a>
+                <a href="playground.html" class="nav-link" style="color: var(--accent-color);"><i class="fas fa-code" style="margin-right: 4px;"></i>Playground</a>
                 <a href="submit.html" class="nav-link" style="color: var(--accent-color); font-weight: bold;">Submit</a>
             </div>
             <div class="nav-actions">
@@ -121,13 +123,87 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">Component Name</h2>
-                <button class="modal-close" id="modalClose">
-                    <i class="fas fa-times"></i>
-                </button>
+                <div class="modal-header-actions">
+                    <a href="#" class="playground-toggle-btn" id="openPlaygroundPage" title="Open in Playground">
+                        <i class="fas fa-external-link-alt"></i>
+                        <span>Open in Playground</span>
+                    </a>
+                    <button class="playground-toggle-btn" id="playgroundToggle" title="Toggle Playground Mode">
+                        <i class="fas fa-play"></i>
+                        <span>Playground</span>
+                    </button>
+                    <button class="modal-close" id="modalClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
             </div>
             <div class="modal-preview" id="modalPreview">
                 <!-- Live preview will be shown here -->
             </div>
+            
+            <!-- Playground Container (hidden by default) -->
+            <div class="playground-container" id="playgroundContainer">
+                <div class="playground-preview">
+                    <div class="playground-preview-content" id="playgroundPreview">
+                        <!-- Live playground preview -->
+                    </div>
+                </div>
+                <div class="playground-editors">
+                    <div class="playground-editor-pane">
+                        <div class="editor-header">
+                            <div class="editor-header-left">
+                                <i class="fab fa-html5"></i>
+                                <span>HTML</span>
+                            </div>
+                            <div class="editor-header-actions">
+                                <button class="editor-btn reset-btn" id="resetHtml" title="Reset HTML">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <button class="editor-btn copy-btn" id="copyHtmlPlayground" title="Copy HTML">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="code-editor-wrapper">
+                            <textarea id="htmlEditor" class="code-editor" placeholder="Enter HTML code..." spellcheck="false"></textarea>
+                        </div>
+                    </div>
+                    <div class="playground-editor-pane">
+                        <div class="editor-header">
+                            <div class="editor-header-left">
+                                <i class="fab fa-css3-alt"></i>
+                                <span>CSS</span>
+                            </div>
+                            <div class="editor-header-actions">
+                                <button class="editor-btn reset-btn" id="resetCss" title="Reset CSS">
+                                    <i class="fas fa-undo"></i>
+                                </button>
+                                <button class="editor-btn copy-btn" id="copyCssPlayground" title="Copy CSS">
+                                    <i class="fas fa-copy"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="code-editor-wrapper">
+                            <textarea id="cssEditor" class="code-editor" placeholder="Enter CSS code..." spellcheck="false"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="playground-status">
+                    <div class="status-indicator">
+                        <span class="status-dot"></span>
+                        <span>Live Preview</span>
+                    </div>
+                    <div class="status-actions">
+                        <button id="resetAll" title="Reset All">
+                            <i class="fas fa-redo"></i> Reset All
+                        </button>
+                        <button id="openInCodePen" title="Open in CodePen">
+                            <i class="fab fa-codepen"></i> Open in CodePen
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
             <div class="code-tabs">
                 <button class="code-tab active" data-tab="html">HTML</button>
                 <button class="code-tab" data-tab="css">CSS</button>
@@ -266,6 +342,7 @@
     <script src="js/components-3d-cards.js"></script>
     <script src="js/components-templates.js"></script>
     <script src="js/app.js"></script>
+    <script src="js/playground.js"></script>
     
     <script>
         // Secret Admin Access: Right-click the logo
