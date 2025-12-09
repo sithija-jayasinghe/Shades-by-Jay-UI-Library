@@ -197,6 +197,22 @@
         const nameInput = document.getElementById('compName');
         const categoryInput = document.getElementById('compCategory');
 
+        // Check auth state and show user info
+        async function checkAuth() {
+            if (!window.supabaseClient) return;
+            
+            const { data: { session } } = await window.supabaseClient.auth.getSession();
+            if (session?.user) {
+                const userName = session.user.user_metadata?.full_name || 
+                               session.user.user_metadata?.user_name || 
+                               session.user.email?.split('@')[0] || 'User';
+                console.log('Logged in as:', userName);
+            }
+        }
+        
+        // Run auth check on page load
+        checkAuth();
+
         // Initialize Shadow DOM
         const shadow = previewArea.attachShadow({ mode: 'open' });
 
@@ -258,9 +274,16 @@
                 if (error) throw error;
 
                 showToast('Component submitted successfully! It will appear after approval.', 'success');
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 2000);
+                
+                // Reset form instead of redirecting to preserve session
+                nameInput.value = '';
+                htmlInput.value = '';
+                cssInput.value = '';
+                categoryInput.selectedIndex = 0;
+                shadow.innerHTML = '';
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Component';
+                
             } catch (err) {
                 console.error('Error:', err);
                 showToast('Error submitting component: ' + err.message, 'error');

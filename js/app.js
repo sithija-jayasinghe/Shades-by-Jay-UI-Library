@@ -129,13 +129,30 @@ function renderComponents(components) {
 async function initAuth() {
     if (!window.supabaseClient) return;
 
-    // Check initial session
-    const { data: { session } } = await window.supabaseClient.auth.getSession();
-    updateAuthUI(session?.user);
+    // Check initial session from localStorage
+    const { data: { session }, error } = await window.supabaseClient.auth.getSession();
+    
+    if (error) {
+        console.error('Error getting session:', error);
+    }
+    
+    if (session?.user) {
+        console.log('User session restored:', session.user.email || session.user.user_metadata?.user_name);
+        updateAuthUI(session.user);
+    } else {
+        updateAuthUI(null);
+    }
 
-    // Listen for auth changes
-    window.supabaseClient.auth.onAuthStateChange((_event, session) => {
+    // Listen for auth changes (login, logout, token refresh)
+    window.supabaseClient.auth.onAuthStateChange((event, session) => {
+        console.log('Auth state changed:', event);
         updateAuthUI(session?.user);
+        
+        // Close auth modal on successful login
+        if (event === 'SIGNED_IN' && authModal) {
+            authModal.classList.remove('active');
+            showToast('Welcome back!');
+        }
     });
 
     // Event Listeners

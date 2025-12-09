@@ -13,7 +13,11 @@ if (typeof supabase === 'undefined') {
     console.log('Initializing Supabase...');
     window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
         auth: {
-            persistSession: false // Since we don't need auth for public submissions
+            persistSession: true, // Keep user logged in across page reloads
+            autoRefreshToken: true, // Automatically refresh tokens before expiry
+            detectSessionInUrl: true, // Handle OAuth redirects
+            storageKey: 'shades-by-jay-auth', // Custom storage key
+            storage: window.localStorage // Use localStorage for persistence
         },
         global: {
             headers: {
