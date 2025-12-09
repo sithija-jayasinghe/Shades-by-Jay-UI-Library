@@ -687,16 +687,6 @@ function openModal(component) {
     
     previewContent.appendChild(shadowHost);
     
-    // Reset resizer to full width
-    const previewResizable = document.getElementById('previewResizable');
-    if (previewResizable) {
-        previewResizable.style.width = '100%';
-        document.getElementById('currentWidth').textContent = '100%';
-        document.querySelectorAll('.resizer-btn').forEach(btn => {
-            btn.classList.toggle('active', btn.dataset.width === '100%');
-        });
-    }
-    
     // Set code content
     htmlContent.textContent = formatCode(component.html);
     cssContent.textContent = formatCode(component.css);
@@ -906,88 +896,20 @@ function updateStats() {
     }
 }
 
-// ==================== RESPONSIVE RESIZER ====================
-
-function initResizer() {
-    const previewResizable = document.getElementById('previewResizable');
-    const resizeHandle = document.getElementById('resizeHandle');
-    const currentWidthDisplay = document.getElementById('currentWidth');
-    const resizerBtns = document.querySelectorAll('.resizer-btn');
-    
-    if (!previewResizable || !resizeHandle) return;
-    
-    let isResizing = false;
-    let startX, startWidth;
-    
-    // Preset size buttons
-    resizerBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const width = btn.dataset.width;
-            previewResizable.style.width = width;
-            currentWidthDisplay.textContent = width;
-            
-            resizerBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
+// NPM Copy Button
+document.addEventListener('DOMContentLoaded', () => {
+    const npmCopyBtn = document.getElementById('npmCopyBtn');
+    if (npmCopyBtn) {
+        npmCopyBtn.addEventListener('click', () => {
+            navigator.clipboard.writeText('npx shades-ui add')
+                .then(() => {
+                    showToast('Command copied to clipboard!');
+                    npmCopyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                    setTimeout(() => {
+                        npmCopyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                    }, 2000);
+                })
+                .catch(() => showToast('Failed to copy', 'error'));
         });
-    });
-    
-    // Drag to resize
-    resizeHandle.addEventListener('mousedown', (e) => {
-        isResizing = true;
-        startX = e.clientX;
-        startWidth = previewResizable.offsetWidth;
-        document.body.style.cursor = 'ew-resize';
-        document.body.style.userSelect = 'none';
-        e.preventDefault();
-    });
-    
-    document.addEventListener('mousemove', (e) => {
-        if (!isResizing) return;
-        
-        const containerWidth = previewResizable.parentElement.offsetWidth;
-        const diff = e.clientX - startX;
-        const newWidth = Math.max(280, Math.min(startWidth + diff, containerWidth));
-        
-        previewResizable.style.width = newWidth + 'px';
-        currentWidthDisplay.textContent = newWidth + 'px';
-        
-        // Deactivate preset buttons when custom dragging
-        resizerBtns.forEach(b => b.classList.remove('active'));
-    });
-    
-    document.addEventListener('mouseup', () => {
-        if (isResizing) {
-            isResizing = false;
-            document.body.style.cursor = '';
-            document.body.style.userSelect = '';
-        }
-    });
-    
-    // Touch support for mobile
-    resizeHandle.addEventListener('touchstart', (e) => {
-        isResizing = true;
-        startX = e.touches[0].clientX;
-        startWidth = previewResizable.offsetWidth;
-        e.preventDefault();
-    });
-    
-    document.addEventListener('touchmove', (e) => {
-        if (!isResizing) return;
-        
-        const containerWidth = previewResizable.parentElement.offsetWidth;
-        const diff = e.touches[0].clientX - startX;
-        const newWidth = Math.max(280, Math.min(startWidth + diff, containerWidth));
-        
-        previewResizable.style.width = newWidth + 'px';
-        currentWidthDisplay.textContent = newWidth + 'px';
-        
-        resizerBtns.forEach(b => b.classList.remove('active'));
-    });
-    
-    document.addEventListener('touchend', () => {
-        isResizing = false;
-    });
-}
-
-// Initialize resizer when DOM is ready
-document.addEventListener('DOMContentLoaded', initResizer);
+    }
+});

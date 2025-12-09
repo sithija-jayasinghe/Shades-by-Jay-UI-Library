@@ -441,137 +441,69 @@
 }
 
 /* ============================================
-   Responsive Resizer
+   NPM Install Section (Hero)
    ============================================ */
-.resizer-controls {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0.75rem 1rem;
-    background: var(--bg-elevated);
-    border-bottom: 1px solid var(--border-color);
-    border-radius: var(--radius) var(--radius) 0 0;
+.npm-install-section {
+    margin-top: 2rem;
+    text-align: center;
 }
 
-.resizer-sizes {
-    display: flex;
-    gap: 0.25rem;
+.npm-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+}
+
+.npm-label i {
+    font-size: 1.2rem;
+    color: #cb3837;
+}
+
+.npm-command {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     background: var(--bg-card);
-    padding: 0.25rem;
-    border-radius: var(--radius);
     border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 0.6rem 1rem;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
-.resizer-btn {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    padding: 0.4rem 0.65rem;
+.npm-command code {
+    color: var(--primary);
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.npm-copy-btn {
     background: transparent;
     border: none;
-    border-radius: calc(var(--radius) - 4px);
     color: var(--text-muted);
-    font-size: 0.75rem;
-    font-weight: 500;
     cursor: pointer;
+    padding: 0.3rem;
+    border-radius: 4px;
     transition: var(--transition);
-    white-space: nowrap;
 }
 
-.resizer-btn:hover {
-    color: var(--text-primary);
+.npm-copy-btn:hover {
+    color: var(--primary);
     background: var(--bg-secondary);
 }
 
-.resizer-btn.active {
-    background: var(--primary);
-    color: white;
-}
-
-.resizer-btn i {
-    font-size: 0.8rem;
-}
-
-.resizer-btn span {
-    display: none;
-}
-
-@media (min-width: 768px) {
-    .resizer-btn span {
-        display: inline;
-    }
-}
-
-.resizer-width-display {
+.npm-hint {
+    margin-top: 0.75rem;
     font-size: 0.75rem;
     color: var(--text-muted);
-    font-weight: 600;
-    font-family: 'JetBrains Mono', monospace;
-    background: var(--bg-card);
-    padding: 0.35rem 0.75rem;
-    border-radius: var(--radius);
-    border: 1px solid var(--border-color);
 }
 
-.preview-resizable {
-    position: relative;
-    width: 100%;
-    max-width: 100%;
-    margin: 0 auto;
-    transition: width 0.3s ease;
-    background: var(--bg-card);
-    border: 1px solid var(--border-color);
-    border-top: none;
-    border-radius: 0 0 var(--radius) var(--radius);
-    min-height: 250px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.preview-content {
-    width: 100%;
-    height: 100%;
-    min-height: 250px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-}
-
-.resize-handle {
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 12px;
-    background: linear-gradient(90deg, transparent, var(--bg-elevated));
-    cursor: ew-resize;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 3px;
-    opacity: 0;
-    transition: opacity 0.2s;
-}
-
-.preview-resizable:hover .resize-handle {
-    opacity: 1;
-}
-
-.resize-handle:hover {
-    background: linear-gradient(90deg, transparent, var(--primary));
-}
-
-.handle-line {
-    width: 3px;
-    height: 12px;
-    background: var(--text-muted);
-    border-radius: 2px;
-}
-
-.resize-handle:hover .handle-line {
-    background: white;
+.npm-hint code {
+    color: var(--text-secondary);
+    background: var(--bg-secondary);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
 }
