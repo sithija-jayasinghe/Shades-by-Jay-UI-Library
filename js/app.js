@@ -653,8 +653,15 @@ function openModal(component) {
     currentComponent = component;
     modalTitle.textContent = component.name;
     
+    // Get the preview content container (inside resizable)
+    const previewContent = document.getElementById('previewContent');
+    if (!previewContent) {
+        console.error('Preview content container not found');
+        return;
+    }
+    
     // Set preview with Shadow DOM
-    modalPreview.innerHTML = '';
+    previewContent.innerHTML = '';
     const shadowHost = document.createElement('div');
     shadowHost.style.width = '100%';
     shadowHost.style.height = '100%';
@@ -678,7 +685,17 @@ function openModal(component) {
         ${component.html}
     `;
     
-    modalPreview.appendChild(shadowHost);
+    previewContent.appendChild(shadowHost);
+    
+    // Reset resizer to full width
+    const previewResizable = document.getElementById('previewResizable');
+    if (previewResizable) {
+        previewResizable.style.width = '100%';
+        document.getElementById('currentWidth').textContent = '100%';
+        document.querySelectorAll('.resizer-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.width === '100%');
+        });
+    }
     
     // Set code content
     htmlContent.textContent = formatCode(component.html);
@@ -888,3 +905,89 @@ function updateStats() {
         templateEl.textContent = templateCount + '+';
     }
 }
+
+// ==================== RESPONSIVE RESIZER ====================
+
+function initResizer() {
+    const previewResizable = document.getElementById('previewResizable');
+    const resizeHandle = document.getElementById('resizeHandle');
+    const currentWidthDisplay = document.getElementById('currentWidth');
+    const resizerBtns = document.querySelectorAll('.resizer-btn');
+    
+    if (!previewResizable || !resizeHandle) return;
+    
+    let isResizing = false;
+    let startX, startWidth;
+    
+    // Preset size buttons
+    resizerBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const width = btn.dataset.width;
+            previewResizable.style.width = width;
+            currentWidthDisplay.textContent = width;
+            
+            resizerBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+        });
+    });
+    
+    // Drag to resize
+    resizeHandle.addEventListener('mousedown', (e) => {
+        isResizing = true;
+        startX = e.clientX;
+        startWidth = previewResizable.offsetWidth;
+        document.body.style.cursor = 'ew-resize';
+        document.body.style.userSelect = 'none';
+        e.preventDefault();
+    });
+    
+    document.addEventListener('mousemove', (e) => {
+        if (!isResizing) return;
+        
+        const containerWidth = previewResizable.parentElement.offsetWidth;
+        const diff = e.clientX - startX;
+        const newWidth = Math.max(280, Math.min(startWidth + diff, containerWidth));
+        
+        previewResizable.style.width = newWidth + 'px';
+        currentWidthDisplay.textContent = newWidth + 'px';
+        
+        // Deactivate preset buttons when custom dragging
+        resizerBtns.forEach(b => b.classList.remove('active'));
+    });
+    
+    document.addEventListener('mouseup', () => {
+        if (isResizing) {
+            isResizing = false;
+            document.body.style.cursor = '';
+            document.body.style.userSelect = '';
+        }
+    });
+    
+    // Touch support for mobile
+    resizeHandle.addEventListener('touchstart', (e) => {
+        isResizing = true;
+        startX = e.touches[0].clientX;
+        startWidth = previewResizable.offsetWidth;
+        e.preventDefault();
+    });
+    
+    document.addEventListener('touchmove', (e) => {
+        if (!isResizing) return;
+        
+        const containerWidth = previewResizable.parentElement.offsetWidth;
+        const diff = e.touches[0].clientX - startX;
+        const newWidth = Math.max(280, Math.min(startWidth + diff, containerWidth));
+        
+        previewResizable.style.width = newWidth + 'px';
+        currentWidthDisplay.textContent = newWidth + 'px';
+        
+        resizerBtns.forEach(b => b.classList.remove('active'));
+    });
+    
+    document.addEventListener('touchend', () => {
+        isResizing = false;
+    });
+}
+
+// Initialize resizer when DOM is ready
+document.addEventListener('DOMContentLoaded', initResizer);

@@ -138,7 +138,39 @@
                 </div>
             </div>
             <div class="modal-preview" id="modalPreview">
-                <!-- Live preview will be shown here -->
+                <!-- Responsive Resizer Controls -->
+                <div class="resizer-controls">
+                    <div class="resizer-sizes">
+                        <button class="resizer-btn active" data-width="100%" title="Full Width">
+                            <i class="fas fa-desktop"></i>
+                            <span>Full</span>
+                        </button>
+                        <button class="resizer-btn" data-width="768px" title="Tablet">
+                            <i class="fas fa-tablet-alt"></i>
+                            <span>768px</span>
+                        </button>
+                        <button class="resizer-btn" data-width="425px" title="Mobile L">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>425px</span>
+                        </button>
+                        <button class="resizer-btn" data-width="375px" title="Mobile M">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>375px</span>
+                        </button>
+                    </div>
+                    <div class="resizer-width-display">
+                        <span id="currentWidth">100%</span>
+                    </div>
+                </div>
+                <!-- Resizable Preview Container -->
+                <div class="preview-resizable" id="previewResizable">
+                    <div class="preview-content" id="previewContent">
+                        <!-- Live preview will be shown here -->
+                    </div>
+                    <div class="resize-handle" id="resizeHandle" title="Drag to resize">
+                        <i class="fas fa-grip-lines-vertical"></i>
+                    </div>
+                </div>
             </div>
             
             <!-- Playground Container (hidden by default) -->
