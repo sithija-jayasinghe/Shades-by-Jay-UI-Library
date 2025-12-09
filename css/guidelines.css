@@ -1,0 +1,393 @@
+/* ============================================
+   Guidelines Page Styles
+   ============================================ */
+
+/* Hero */
+.guide-hero {
+    background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+    padding: 4rem 2rem 3rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.guide-hero-content h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+.guide-hero-content h1 i {
+    color: var(--primary);
+}
+
+.guide-hero-content p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Main */
+.guide-main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+}
+
+.guide-section {
+    margin-bottom: 4rem;
+}
+
+.guide-section h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.guide-section h2 i {
+    color: var(--primary);
+}
+
+.guide-section p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+/* Guide Cards */
+.guide-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.guide-card h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.guide-card p {
+    margin-bottom: 0.75rem;
+}
+
+.guide-card.warning {
+    border-color: rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.05);
+}
+
+.guide-card.warning h3 {
+    color: #ef4444;
+}
+
+/* Checklists */
+.checklist {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.checklist li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    color: var(--text-secondary);
+}
+
+.checklist li i {
+    color: #10b981;
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+}
+
+.checklist code {
+    background: var(--bg-secondary);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+.avoid-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.avoid-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+    color: var(--text-secondary);
+}
+
+.avoid-list li i {
+    color: #ef4444;
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+}
+
+/* Naming Examples */
+.naming-examples {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.naming-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+}
+
+.naming-card h4 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+}
+
+.naming-card.good h4 i {
+    color: #10b981;
+}
+
+.naming-card.bad h4 i {
+    color: #ef4444;
+}
+
+.naming-card code {
+    display: block;
+    background: var(--bg-secondary);
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+}
+
+.naming-card.good code {
+    border-left: 3px solid #10b981;
+}
+
+.naming-card.bad code {
+    border-left: 3px solid #ef4444;
+    text-decoration: line-through;
+    opacity: 0.7;
+}
+
+/* Tip Box */
+.tip-box {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: var(--radius);
+    margin: 1.5rem 0;
+}
+
+.tip-box i {
+    color: var(--primary);
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.tip-box strong {
+    color: var(--primary);
+}
+
+.tip-box code {
+    background: var(--bg-secondary);
+    padding: 0.15rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+}
+
+/* Code Example */
+.code-example {
+    background: var(--bg-secondary);
+    border-radius: var(--radius);
+    padding: 1rem;
+    margin-top: 0.75rem;
+    overflow-x: auto;
+}
+
+.code-example code {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    white-space: pre;
+    color: var(--text-primary);
+}
+
+/* Responsive Tips */
+.responsive-tips {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.tip-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    text-align: center;
+}
+
+.tip-card i {
+    font-size: 2rem;
+    color: var(--primary);
+    margin-bottom: 0.75rem;
+}
+
+.tip-card h4 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.tip-card p {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0;
+}
+
+/* Checklist Grid */
+.checklist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 0.75rem;
+    margin: 1.5rem 0;
+}
+
+.checklist-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.checklist-item:hover {
+    border-color: var(--primary);
+}
+
+.checklist-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--primary);
+    cursor: pointer;
+}
+
+.checklist-item label {
+    cursor: pointer;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.checklist-item:has(input:checked) {
+    background: rgba(139, 92, 246, 0.1);
+    border-color: var(--primary);
+}
+
+.checklist-item:has(input:checked) label {
+    color: var(--text-primary);
+}
+
+/* Submit Button */
+.submit-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.875rem 1.75rem;
+    background: var(--primary);
+    color: white;
+    border-radius: var(--radius);
+    font-weight: 600;
+    text-decoration: none;
+    margin-top: 1rem;
+    transition: var(--transition);
+}
+
+.submit-btn:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+}
+
+/* Footer */
+.guide-footer {
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    padding: 2rem;
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.footer-content p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.footer-links a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+}
+
+.footer-links a:hover {
+    color: var(--primary);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .guide-hero-content h1 {
+        font-size: 1.75rem;
+    }
+
+    .guide-main {
+        padding: 2rem 1rem;
+    }
+
+    .naming-examples {
+        grid-template-columns: 1fr;
+    }
+
+    .footer-content {
+        flex-direction: column;
+        gap: 1rem;
+    }
+}

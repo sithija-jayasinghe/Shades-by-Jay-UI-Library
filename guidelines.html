@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guidelines - Shades By Jay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/guidelines.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-cube"></i>
+                <span>Shades By Jay</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Components</a>
+                <a href="documentation.html" class="nav-link">Documentation</a>
+                <a href="guidelines.html" class="nav-link active">Guidelines</a>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="guide-hero">
+        <div class="guide-hero-content">
+            <h1><i class="fas fa-compass"></i> Guidelines</h1>
+            <p>Best practices and standards for contributing components to Shades By Jay.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="guide-main">
+        <div class="guide-content">
+            
+            <!-- Introduction -->
+            <section class="guide-section">
+                <h2><i class="fas fa-star"></i> Why Guidelines Matter</h2>
+                <p>Following consistent guidelines ensures that all components in our library maintain high quality, work well together, and provide the best experience for developers using them.</p>
+            </section>
+
+            <!-- Code Standards -->
+            <section class="guide-section">
+                <h2><i class="fas fa-code"></i> Code Standards</h2>
+                
+                <div class="guide-card">
+                    <h3>HTML Best Practices</h3>
+                    <ul class="checklist">
+                        <li><i class="fas fa-check"></i> Use semantic HTML elements when appropriate</li>
+                        <li><i class="fas fa-check"></i> Keep markup clean and minimal</li>
+                        <li><i class="fas fa-check"></i> Use meaningful class names (e.g., <code>.btn-primary</code> not <code>.b1</code>)</li>
+                        <li><i class="fas fa-check"></i> Avoid inline styles - use CSS classes instead</li>
+                        <li><i class="fas fa-check"></i> Ensure proper nesting and indentation</li>
+                        <li><i class="fas fa-check"></i> Include necessary ARIA attributes for accessibility</li>
+                    </ul>
+                </div>
+
+                <div class="guide-card">
+                    <h3>CSS Best Practices</h3>
+                    <ul class="checklist">
+                        <li><i class="fas fa-check"></i> Use unique, descriptive class names to avoid conflicts</li>
+                        <li><i class="fas fa-check"></i> Avoid using IDs for styling</li>
+                        <li><i class="fas fa-check"></i> Keep specificity low when possible</li>
+                        <li><i class="fas fa-check"></i> Use CSS custom properties for colors when helpful</li>
+                        <li><i class="fas fa-check"></i> Include hover and focus states</li>
+                        <li><i class="fas fa-check"></i> Use relative units (rem, em, %) for sizing</li>
+                    </ul>
+                </div>
+
+                <div class="guide-card warning">
+                    <h3><i class="fas fa-exclamation-triangle"></i> Avoid</h3>
+                    <ul class="avoid-list">
+                        <li><i class="fas fa-times"></i> JavaScript dependencies (keep it CSS-only)</li>
+                        <li><i class="fas fa-times"></i> External image URLs that might break</li>
+                        <li><i class="fas fa-times"></i> Vendor prefixes (they're added automatically)</li>
+                        <li><i class="fas fa-times"></i> !important declarations unless absolutely necessary</li>
+                        <li><i class="fas fa-times"></i> Fixed pixel widths that break responsiveness</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Naming Conventions -->
+            <section class="guide-section">
+                <h2><i class="fas fa-tag"></i> Naming Conventions</h2>
+                
+                <div class="naming-examples">
+                    <div class="naming-card good">
+                        <h4><i class="fas fa-check-circle"></i> Good Examples</h4>
+                        <code>.btn-gradient-glow</code>
+                        <code>.card-profile</code>
+                        <code>.loader-dots</code>
+                        <code>.switch-ios</code>
+                        <code>.input-floating-label</code>
+                    </div>
+                    <div class="naming-card bad">
+                        <h4><i class="fas fa-times-circle"></i> Bad Examples</h4>
+                        <code>.btn1</code>
+                        <code>.myCard</code>
+                        <code>.x</code>
+                        <code>.component</code>
+                        <code>.style</code>
+                    </div>
+                </div>
+
+                <div class="tip-box">
+                    <i class="fas fa-lightbulb"></i>
+                    <div>
+                        <strong>Naming Pattern:</strong> Use the format <code>[component-type]-[descriptor]</code> for clarity. For example: <code>btn-neon</code>, <code>card-glass</code>, <code>loader-pulse</code>.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Accessibility -->
+            <section class="guide-section">
+                <h2><i class="fas fa-universal-access"></i> Accessibility</h2>
+                <p>Making components accessible ensures everyone can use them. Follow these guidelines:</p>
+                
+                <div class="guide-card">
+                    <h3>Color Contrast</h3>
+                    <p>Ensure text has sufficient contrast against backgrounds. Aim for WCAG AA compliance (4.5:1 for normal text, 3:1 for large text).</p>
+                </div>
+
+                <div class="guide-card">
+                    <h3>Focus States</h3>
+                    <p>All interactive elements should have visible focus indicators. Never remove outlines without providing an alternative.</p>
+                    <div class="code-example">
+                        <code>.btn:focus {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}</code>
+                    </div>
+                </div>
+
+                <div class="guide-card">
+                    <h3>Interactive Elements</h3>
+                    <p>Use appropriate HTML elements:</p>
+                    <ul>
+                        <li>Use <code>&lt;button&gt;</code> for clickable actions</li>
+                        <li>Use <code>&lt;a&gt;</code> for navigation links</li>
+                        <li>Use <code>&lt;input&gt;</code> for form inputs</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- Responsiveness -->
+            <section class="guide-section">
+                <h2><i class="fas fa-mobile-alt"></i> Responsiveness</h2>
+                <p>Components should work well on all screen sizes:</p>
+                
+                <div class="responsive-tips">
+                    <div class="tip-card">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                        <h4>Flexible Sizing</h4>
+                        <p>Use relative units and flexible layouts that adapt to container width.</p>
+                    </div>
+                    <div class="tip-card">
+                        <i class="fas fa-text-height"></i>
+                        <h4>Readable Text</h4>
+                        <p>Ensure text remains readable at all sizes. Use rem for font sizes.</p>
+                    </div>
+                    <div class="tip-card">
+                        <i class="fas fa-hand-pointer"></i>
+                        <h4>Touch Friendly</h4>
+                        <p>Make touch targets at least 44x44 pixels for mobile users.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Animation Guidelines -->
+            <section class="guide-section">
+                <h2><i class="fas fa-magic"></i> Animation Guidelines</h2>
+                
+                <div class="guide-card">
+                    <h3>Performance</h3>
+                    <ul class="checklist">
+                        <li><i class="fas fa-check"></i> Animate only transform and opacity for best performance</li>
+                        <li><i class="fas fa-check"></i> Keep animations under 300ms for UI feedback</li>
+                        <li><i class="fas fa-check"></i> Use <code>will-change</code> sparingly</li>
+                        <li><i class="fas fa-check"></i> Avoid animating layout properties (width, height, top, left)</li>
+                    </ul>
+                </div>
+
+                <div class="guide-card">
+                    <h3>Motion Preferences</h3>
+                    <p>Respect users who prefer reduced motion:</p>
+                    <div class="code-example">
+                        <code>@media (prefers-reduced-motion: reduce) {
+    .animated-element {
+        animation: none;
+        transition: none;
+    }
+}</code>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Submission Checklist -->
+            <section class="guide-section">
+                <h2><i class="fas fa-clipboard-check"></i> Submission Checklist</h2>
+                <p>Before submitting a component, make sure it meets all these criteria:</p>
+                
+                <div class="checklist-grid">
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check1">
+                        <label for="check1">Works without JavaScript</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check2">
+                        <label for="check2">Uses unique class names</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check3">
+                        <label for="check3">Responsive on mobile</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check4">
+                        <label for="check4">Has hover/focus states</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check5">
+                        <label for="check5">Clean, formatted code</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check6">
+                        <label for="check6">No external dependencies</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check7">
+                        <label for="check7">Tested in multiple browsers</label>
+                    </div>
+                    <div class="checklist-item">
+                        <input type="checkbox" id="check8">
+                        <label for="check8">Original work (not copied)</label>
+                    </div>
+                </div>
+
+                <a href="submit.html" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i>
+                    Submit Your Component
+                </a>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="guide-footer">
+        <div class="footer-content">
+            <p>© 2025 Shades By Jay. Open source under MIT License.</p>
+            <div class="footer-links">
+                <a href="https://github.com/sithija-jayasinghe/Shades-by-Jay-UI-Library" target="_blank">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
+        themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            themeToggle.innerHTML = next === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        });
+    </script>
+</body>
+</html>

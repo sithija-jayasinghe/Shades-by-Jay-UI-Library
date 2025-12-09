@@ -895,21 +895,3 @@ function updateStats() {
         templateEl.textContent = templateCount + '+';
     }
 }
-
-// NPM Copy Button
-document.addEventListener('DOMContentLoaded', () => {
-    const npmCopyBtn = document.getElementById('npmCopyBtn');
-    if (npmCopyBtn) {
-        npmCopyBtn.addEventListener('click', () => {
-            navigator.clipboard.writeText('npx shades-ui add')
-                .then(() => {
-                    showToast('Command copied to clipboard!');
-                    npmCopyBtn.innerHTML = '<i class="fas fa-check"></i>';
-                    setTimeout(() => {
-                        npmCopyBtn.innerHTML = '<i class="fas fa-copy"></i>';
-                    }, 2000);
-                })
-                .catch(() => showToast('Failed to copy', 'error'));
-        });
-    }
-});

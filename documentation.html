@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation - Shades By Jay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/documentation.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-cube"></i>
+                <span>Shades By Jay</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Components</a>
+                <a href="documentation.html" class="nav-link active">Documentation</a>
+                <a href="playground.html" class="nav-link">Playground</a>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <header class="doc-hero">
+        <div class="doc-hero-content">
+            <h1><i class="fas fa-book"></i> Documentation</h1>
+            <p>Everything you need to know to use Shades By Jay UI components in your projects.</p>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="doc-main">
+        <aside class="doc-sidebar">
+            <nav class="doc-nav">
+                <h3>Getting Started</h3>
+                <ul>
+                    <li><a href="#introduction" class="active">Introduction</a></li>
+                    <li><a href="#installation">Installation</a></li>
+                    <li><a href="#quick-start">Quick Start</a></li>
+                </ul>
+                <h3>Usage</h3>
+                <ul>
+                    <li><a href="#copy-paste">Copy & Paste</a></li>
+                    <li><a href="#customization">Customization</a></li>
+                </ul>
+                <h3>Components</h3>
+                <ul>
+                    <li><a href="#buttons">Buttons</a></li>
+                    <li><a href="#cards">Cards</a></li>
+                    <li><a href="#loaders">Loaders</a></li>
+                    <li><a href="#forms">Forms</a></li>
+                    <li><a href="#switches">Switches</a></li>
+                </ul>
+                <h3>Advanced</h3>
+                <ul>
+                    <li><a href="#playground">Playground</a></li>
+                    <li><a href="#contributing">Contributing</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <div class="doc-content">
+            <!-- Introduction -->
+            <section id="introduction" class="doc-section">
+                <h2>Introduction</h2>
+                <p>Shades By Jay is an open-source UI component library featuring beautiful, community-built elements. All components are built with pure HTML and CSS, making them framework-agnostic and easy to integrate into any project.</p>
+                
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-code"></i>
+                        <h4>Pure HTML/CSS</h4>
+                        <p>No JavaScript dependencies. Works everywhere.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-copy"></i>
+                        <h4>Copy & Paste</h4>
+                        <p>One-click copy. Instant integration.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-palette"></i>
+                        <h4>Customizable</h4>
+                        <p>Easy to modify colors, sizes, and styles.</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-users"></i>
+                        <h4>Community Built</h4>
+                        <p>Created by developers, for developers.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Installation -->
+            <section id="installation" class="doc-section">
+                <h2>Installation</h2>
+                <p>Using Shades By Jay components is simple - just copy and paste!</p>
+                
+                <h3>How It Works</h3>
+                <p>Simply browse our component library, click on any component, and copy the HTML/CSS code directly into your project. No build tools, no dependencies, no setup required.</p>
+            </section>
+
+            <!-- Quick Start -->
+            <section id="quick-start" class="doc-section">
+                <h2>Quick Start</h2>
+                <p>Get started in under a minute:</p>
+                
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h4>Browse Components</h4>
+                            <p>Visit the <a href="index.html">components page</a> and find a component you like.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h4>Copy the Code</h4>
+                            <p>Click on the component to open it, then copy the HTML and CSS.</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h4>Paste & Customize</h4>
+                            <p>Paste the code into your project and customize as needed.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Copy & Paste -->
+            <section id="copy-paste" class="doc-section">
+                <h2>Copy & Paste Usage</h2>
+                <p>Each component provides separate HTML and CSS code that you can copy:</p>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>HTML</span>
+                    </div>
+                    <pre><code>&lt;button class="btn-gradient"&gt;
+    &lt;span&gt;Click Me&lt;/span&gt;
+&lt;/button&gt;</code></pre>
+                </div>
+                
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>CSS</span>
+                    </div>
+                    <pre><code>.btn-gradient {
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    border: none;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.btn-gradient:hover {
+    transform: translateY(-2px);
+}</code></pre>
+                </div>
+                
+                <div class="tip-box">
+                    <i class="fas fa-lightbulb"></i>
+                    <div>
+                        <strong>Pro Tip:</strong> Use the Playground to experiment with components before adding them to your project.
+                    </div>
+                </div>
+            </section>
+
+
+
+            <!-- Customization -->
+            <section id="customization" class="doc-section">
+                <h2>Customization</h2>
+                <p>All components are designed to be easily customizable. Here are some common modifications:</p>
+                
+                <h3>Colors</h3>
+                <p>Most components use CSS custom properties or direct color values that you can easily change:</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>CSS</span>
+                    </div>
+                    <pre><code>/* Original */
+background: linear-gradient(135deg, #667eea, #764ba2);
+
+/* Your custom colors */
+background: linear-gradient(135deg, #00d4ff, #090979);</code></pre>
+                </div>
+                
+                <h3>Sizes</h3>
+                <p>Adjust padding, font-size, and dimensions to fit your design:</p>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span>CSS</span>
+                    </div>
+                    <pre><code>/* Small button */
+padding: 8px 16px;
+font-size: 14px;
+
+/* Large button */
+padding: 16px 32px;
+font-size: 18px;</code></pre>
+                </div>
+            </section>
+
+            <!-- Components -->
+            <section id="buttons" class="doc-section">
+                <h2>Buttons</h2>
+                <p>Our button collection includes gradient buttons, neon effects, 3D buttons, animated buttons, and more. Each button is fully customizable and works without JavaScript.</p>
+                <a href="index.html?category=buttons" class="doc-link">View all buttons →</a>
+            </section>
+
+            <section id="cards" class="doc-section">
+                <h2>Cards</h2>
+                <p>Beautiful card components for displaying content, products, profiles, and more. Includes hover effects, glass morphism, and animated variants.</p>
+                <a href="index.html?category=cards" class="doc-link">View all cards →</a>
+            </section>
+
+            <section id="loaders" class="doc-section">
+                <h2>Loaders</h2>
+                <p>CSS-only loading animations including spinners, dots, bars, and creative animated loaders. Perfect for loading states.</p>
+                <a href="index.html?category=loaders" class="doc-link">View all loaders →</a>
+            </section>
+
+            <section id="forms" class="doc-section">
+                <h2>Forms</h2>
+                <p>Form components including inputs, textareas, checkboxes, and complete form layouts with modern styling.</p>
+                <a href="index.html?category=forms" class="doc-link">View all forms →</a>
+            </section>
+
+            <section id="switches" class="doc-section">
+                <h2>Switches</h2>
+                <p>Toggle switches and checkboxes with various styles including iOS-style, material design, and creative animations.</p>
+                <a href="index.html?category=switches" class="doc-link">View all switches →</a>
+            </section>
+
+            <!-- Playground -->
+            <section id="playground" class="doc-section">
+                <h2>Playground</h2>
+                <p>The Playground allows you to experiment with components in real-time:</p>
+                <ul>
+                    <li>Edit HTML and CSS live</li>
+                    <li>See changes instantly</li>
+                    <li>Reset to original code anytime</li>
+                    <li>Copy your modified code</li>
+                </ul>
+                <a href="playground.html" class="doc-link">Open Playground →</a>
+            </section>
+
+            <!-- Contributing -->
+            <section id="contributing" class="doc-section">
+                <h2>Contributing</h2>
+                <p>Shades By Jay is community-driven! Here's how you can contribute:</p>
+                
+                <h3>Submit a Component</h3>
+                <ol>
+                    <li>Create your component with clean HTML/CSS</li>
+                    <li>Visit the <a href="submit.html">Submit page</a></li>
+                    <li>Fill in the details and submit</li>
+                    <li>Your component will be reviewed and added</li>
+                </ol>
+                
+                <h3>Guidelines</h3>
+                <ul>
+                    <li>Use pure HTML and CSS (no JavaScript required)</li>
+                    <li>Make sure components are responsive</li>
+                    <li>Use meaningful class names</li>
+                    <li>Keep code clean and well-formatted</li>
+                </ul>
+                
+                <a href="submit.html" class="submit-btn">
+                    <i class="fas fa-paper-plane"></i>
+                    Submit Your Component
+                </a>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="doc-footer">
+        <div class="footer-content">
+            <p>© 2025 Shades By Jay. Open source under MIT License.</p>
+            <div class="footer-links">
+                <a href="https://github.com/sithija-jayasinghe/Shades-by-Jay-UI-Library" target="_blank">
+                    <i class="fab fa-github"></i> GitHub
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        
+        themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme');
+            const next = current === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', next);
+            localStorage.setItem('theme', next);
+            themeToggle.innerHTML = next === 'dark' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        });
+
+        // Sidebar active link
+        const sections = document.querySelectorAll('.doc-section');
+        const navLinks = document.querySelectorAll('.doc-nav a');
+
+        window.addEventListener('scroll', () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 100;
+                if (scrollY >= sectionTop) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        // Copy code buttons
+        document.querySelectorAll('.copy-code-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const code = btn.dataset.code || btn.closest('.code-block').querySelector('code').textContent;
+                navigator.clipboard.writeText(code);
+                btn.innerHTML = '<i class="fas fa-check"></i>';
+                setTimeout(() => btn.innerHTML = '<i class="fas fa-copy"></i>', 2000);
+            });
+        });
+    </script>
+</body>
+</html>
