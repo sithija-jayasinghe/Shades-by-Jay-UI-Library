@@ -6,18 +6,40 @@
 const SUPABASE_URL = 'https://inlgomcjwlextxiehsxv.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlubGdvbWNqd2xleHR4aWVoc3h2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ5NDYwMDksImV4cCI6MjA4MDUyMjAwOX0.4J_vSIue5wgkQEfhQEnER6iP3AzfR83Ij8b1DnmUn2Y';
 
+// Storage key for auth tokens
+const AUTH_STORAGE_KEY = 'shades-by-jay-auth';
+
 // Initialize Supabase Client
 if (typeof supabase === 'undefined') {
     console.error('Supabase SDK not loaded! Make sure to include the script tag in your HTML.');
 } else if (SUPABASE_URL && SUPABASE_KEY) {
     console.log('Initializing Supabase...');
+    
+    // Clear any potentially corrupted auth data before initialization
+    try {
+        const storedAuth = localStorage.getItem(AUTH_STORAGE_KEY);
+        if (storedAuth) {
+            const parsed = JSON.parse(storedAuth);
+            // Check if token is expired
+            if (parsed?.expires_at && parsed.expires_at < Math.floor(Date.now() / 1000)) {
+                console.log('Clearing expired auth token');
+                localStorage.removeItem(AUTH_STORAGE_KEY);
+            }
+        }
+    } catch (e) {
+        // If parsing fails, clear the corrupted data
+        console.warn('Clearing corrupted auth data');
+        localStorage.removeItem(AUTH_STORAGE_KEY);
+    }
+    
     window.supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
         auth: {
             persistSession: true, // Keep user logged in across page reloads
             autoRefreshToken: true, // Automatically refresh tokens before expiry
             detectSessionInUrl: true, // Handle OAuth redirects
-            storageKey: 'shades-by-jay-auth', // Custom storage key
-            storage: window.localStorage // Use localStorage for persistence
+            storageKey: AUTH_STORAGE_KEY, // Custom storage key
+            storage: window.localStorage, // Use localStorage for persistence
+            flowType: 'pkce' // Use PKCE flow for better security
         },
         global: {
             headers: {
@@ -25,6 +47,9 @@ if (typeof supabase === 'undefined') {
             }
         }
     });
+    
+    // Export storage key for use in other files
+    window.AUTH_STORAGE_KEY = AUTH_STORAGE_KEY;
 } else {
     console.warn('Supabase not configured. Please update js/supabase-config.js');
 }

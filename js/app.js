@@ -126,132 +126,316 @@ function renderComponents(components) {
 
 // ==================== AUTHENTICATION LOGIC ====================
 
+// Track if auth has been initialized to prevent duplicate event listeners
+let authInitialized = false;
+let isSignUpMode = false;
+
 async function initAuth() {
-    if (!window.supabaseClient) return;
+    if (!window.supabaseClient) {
+        console.warn('Supabase client not available');
+        return;
+    }
+
+    // Prevent duplicate initialization - THIS FIXES THE BUG
+    if (authInitialized) {
+        console.log('Auth already initialized, skipping...');
+        return;
+    }
+    authInitialized = true;
 
     // Check initial session from localStorage
-    const { data: { session }, error } = await window.supabaseClient.auth.getSession();
-    
-    if (error) {
-        console.error('Error getting session:', error);
-    }
-    
-    if (session?.user) {
-        console.log('User session restored:', session.user.email || session.user.user_metadata?.user_name);
-        updateAuthUI(session.user);
-    } else {
-        updateAuthUI(null);
+    try {
+        const { data: { session }, error } = await window.supabaseClient.auth.getSession();
+        
+        if (error) {
+            console.error('Error getting session:', error);
+            // Clear potentially corrupted session data
+            clearAuthState();
+        }
+        
+        if (session?.user) {
+            console.log('User session restored:', session.user.email || session.user.user_metadata?.user_name);
+            updateAuthUI(session.user);
+        } else {
+            updateAuthUI(null);
+        }
+    } catch (error) {
+        console.error('Failed to get session:', error);
+        clearAuthState();
     }
 
     // Listen for auth changes (login, logout, token refresh)
     window.supabaseClient.auth.onAuthStateChange((event, session) => {
         console.log('Auth state changed:', event);
-        updateAuthUI(session?.user);
         
-        // Close auth modal on successful login
-        if (event === 'SIGNED_IN' && authModal) {
-            authModal.classList.remove('active');
-            showToast('Welcome back!');
+        switch (event) {
+            case 'SIGNED_IN':
+                updateAuthUI(session?.user);
+                if (authModal) {
+                    authModal.classList.remove('active');
+                }
+                showToast('Welcome back!');
+                break;
+            case 'SIGNED_OUT':
+                // Explicitly clear all auth state on sign out
+                clearAuthState();
+                updateAuthUI(null);
+                showToast('Logged out successfully');
+                break;
+            case 'TOKEN_REFRESHED':
+                console.log('Token refreshed successfully');
+                updateAuthUI(session?.user);
+                break;
+            case 'USER_UPDATED':
+                updateAuthUI(session?.user);
+                break;
+            default:
+                updateAuthUI(session?.user);
         }
     });
 
-    // Event Listeners
-    if (authBtn) authBtn.addEventListener('click', () => authModal.classList.add('active'));
-    if (authClose) authClose.addEventListener('click', () => authModal.classList.remove('active'));
-    
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', async () => {
-            await window.supabaseClient.auth.signOut();
-            showToast('Logged out successfully');
-        });
-    }
-
-    if (githubLogin) {
-        githubLogin.addEventListener('click', async () => {
-            await window.supabaseClient.auth.signInWithOAuth({ 
-                provider: 'github',
-                options: {
-                    redirectTo: window.location.href
-                }
-            });
-        });
-    }
-
-    if (googleLogin) {
-        googleLogin.addEventListener('click', async () => {
-            await window.supabaseClient.auth.signInWithOAuth({ 
-                provider: 'google',
-                options: {
-                    redirectTo: window.location.href
-                }
-            });
-        });
-    }
-
-    // Email Auth Logic
-    let isSignUpMode = false;
-    
-    if (toggleAuthMode) {
-        toggleAuthMode.addEventListener('click', (e) => {
-            e.preventDefault();
-            isSignUpMode = !isSignUpMode;
-            const title = document.getElementById('authTitle');
-            const submitBtn = emailAuthForm.querySelector('button[type="submit"]');
-            const nameField = document.getElementById('nameField');
-            
-            if (isSignUpMode) {
-                title.textContent = 'Create Account';
-                submitBtn.textContent = 'Sign Up';
-                toggleAuthMode.textContent = 'Sign In';
-                if (nameField) nameField.classList.remove('hidden');
-            } else {
-                title.textContent = 'Welcome Back';
-                submitBtn.textContent = 'Sign In';
-                toggleAuthMode.textContent = 'Sign Up';
-                if (nameField) nameField.classList.add('hidden');
-            }
-        });
-    }
-
-    if (emailAuthForm) {
-        emailAuthForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('emailInput').value;
-            const password = document.getElementById('passwordInput').value;
-            const nameInput = document.getElementById('nameInput');
-            
-            try {
-                if (isSignUpMode) {
-                    const { error } = await window.supabaseClient.auth.signUp({
-                        email,
-                        password,
-                        options: {
-                            data: {
-                                full_name: nameInput ? nameInput.value : ''
-                            }
-                        }
-                    });
-                    if (error) throw error;
-                    showToast('Check your email for confirmation link!');
-                } else {
-                    const { error } = await window.supabaseClient.auth.signInWithPassword({
-                        email,
-                        password,
-                    });
-                    if (error) throw error;
-                    showToast('Signed in successfully!');
-                }
-                authModal.classList.remove('active');
-            } catch (error) {
-                showToast(error.message, 'error');
-            }
-        });
-    }
+    // Set up event listeners (only once due to authInitialized guard)
+    setupAuthEventListeners();
 
     // Fetch initial likes data
     await fetchLikes();
 
     // Favorites Modal Event Listeners
+    setupFavoritesEventListeners();
+}
+
+// Clear all auth-related state
+function clearAuthState() {
+    currentUser = null;
+    userLikes.clear();
+    userFavorites.clear();
+    isSignUpMode = false;
+    
+    // Clear the custom storage key used by Supabase
+    try {
+        localStorage.removeItem('shades-by-jay-auth');
+    } catch (e) {
+        console.warn('Could not clear localStorage:', e);
+    }
+    
+    // Reset form fields
+    const emailInput = document.getElementById('emailInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const nameInput = document.getElementById('nameInput');
+    
+    if (emailInput) emailInput.value = '';
+    if (passwordInput) passwordInput.value = '';
+    if (nameInput) nameInput.value = '';
+    
+    // Reset auth modal to sign-in mode
+    resetAuthModalToSignIn();
+}
+
+// Reset auth modal to sign-in mode
+function resetAuthModalToSignIn() {
+    isSignUpMode = false;
+    const title = document.getElementById('authTitle');
+    const submitBtn = emailAuthForm?.querySelector('button[type="submit"]');
+    const nameField = document.getElementById('nameField');
+    
+    if (title) title.textContent = 'Welcome Back';
+    if (submitBtn) submitBtn.textContent = 'Sign In';
+    if (toggleAuthMode) toggleAuthMode.textContent = 'Sign Up';
+    if (nameField) nameField.classList.add('hidden');
+}
+
+// Setup auth-related event listeners (called only once)
+function setupAuthEventListeners() {
+    if (authBtn) {
+        authBtn.addEventListener('click', () => authModal.classList.add('active'));
+    }
+    
+    if (authClose) {
+        authClose.addEventListener('click', () => {
+            authModal.classList.remove('active');
+            resetAuthModalToSignIn();
+        });
+    }
+    
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', handleLogout);
+    }
+
+    if (githubLogin) {
+        githubLogin.addEventListener('click', () => handleOAuthLogin('github'));
+    }
+
+    if (googleLogin) {
+        googleLogin.addEventListener('click', () => handleOAuthLogin('google'));
+    }
+
+    if (toggleAuthMode) {
+        toggleAuthMode.addEventListener('click', handleToggleAuthMode);
+    }
+
+    if (emailAuthForm) {
+        emailAuthForm.addEventListener('submit', handleEmailAuth);
+    }
+}
+
+// Handle logout with proper error handling
+async function handleLogout() {
+    try {
+        const { error } = await window.supabaseClient.auth.signOut();
+        if (error) {
+            console.error('Logout error:', error);
+            showToast('Logout failed: ' + error.message, 'error');
+            // Force clear state even if API call failed
+            clearAuthState();
+            updateAuthUI(null);
+        }
+        // Success toast is handled by onAuthStateChange
+    } catch (error) {
+        console.error('Logout exception:', error);
+        showToast('Logout failed. Please try again.', 'error');
+        // Force clear state on any error
+        clearAuthState();
+        updateAuthUI(null);
+    }
+}
+
+// Handle OAuth login with proper error handling
+async function handleOAuthLogin(provider) {
+    try {
+        const { error } = await window.supabaseClient.auth.signInWithOAuth({ 
+            provider: provider,
+            options: {
+                redirectTo: window.location.href
+            }
+        });
+        
+        if (error) {
+            console.error(`${provider} login error:`, error);
+            showToast(`${provider} login failed: ` + error.message, 'error');
+        }
+    } catch (error) {
+        console.error(`${provider} login exception:`, error);
+        showToast(`Failed to connect to ${provider}. Please try again.`, 'error');
+    }
+}
+
+// Handle toggle between sign-in and sign-up modes
+function handleToggleAuthMode(e) {
+    e.preventDefault();
+    isSignUpMode = !isSignUpMode;
+    const title = document.getElementById('authTitle');
+    const submitBtn = emailAuthForm?.querySelector('button[type="submit"]');
+    const nameField = document.getElementById('nameField');
+    
+    if (isSignUpMode) {
+        if (title) title.textContent = 'Create Account';
+        if (submitBtn) submitBtn.textContent = 'Sign Up';
+        if (toggleAuthMode) toggleAuthMode.textContent = 'Sign In';
+        if (nameField) nameField.classList.remove('hidden');
+    } else {
+        if (title) title.textContent = 'Welcome Back';
+        if (submitBtn) submitBtn.textContent = 'Sign In';
+        if (toggleAuthMode) toggleAuthMode.textContent = 'Sign Up';
+        if (nameField) nameField.classList.add('hidden');
+    }
+}
+
+// Handle email authentication with proper error handling
+async function handleEmailAuth(e) {
+    e.preventDefault();
+    
+    const emailInput = document.getElementById('emailInput');
+    const passwordInput = document.getElementById('passwordInput');
+    const nameInput = document.getElementById('nameInput');
+    const submitBtn = emailAuthForm?.querySelector('button[type="submit"]');
+    
+    const email = emailInput?.value?.trim();
+    const password = passwordInput?.value;
+    
+    // Validate inputs
+    if (!email || !password) {
+        showToast('Please enter both email and password', 'error');
+        return;
+    }
+    
+    // Disable button to prevent double-submit
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.textContent = isSignUpMode ? 'Signing up...' : 'Signing in...';
+    }
+    
+    try {
+        if (isSignUpMode) {
+            const { data, error } = await window.supabaseClient.auth.signUp({
+                email,
+                password,
+                options: {
+                    data: {
+                        full_name: nameInput?.value?.trim() || ''
+                    }
+                }
+            });
+            
+            if (error) {
+                throw error;
+            }
+            
+            // Check if email confirmation is required
+            if (data?.user && !data?.session) {
+                showToast('Check your email for confirmation link!');
+            } else if (data?.session) {
+                showToast('Account created successfully!');
+            }
+            
+            authModal.classList.remove('active');
+            resetAuthModalToSignIn();
+        } else {
+            const { data, error } = await window.supabaseClient.auth.signInWithPassword({
+                email,
+                password,
+            });
+            
+            if (error) {
+                throw error;
+            }
+            
+            if (!data?.session) {
+                throw new Error('Login failed - no session returned');
+            }
+            
+            // Success is handled by onAuthStateChange
+            authModal.classList.remove('active');
+            resetAuthModalToSignIn();
+        }
+        
+        // Clear password field for security
+        if (passwordInput) passwordInput.value = '';
+        
+    } catch (error) {
+        console.error('Auth error:', error);
+        
+        // Provide user-friendly error messages
+        let errorMessage = error.message;
+        if (error.message?.includes('Invalid login credentials')) {
+            errorMessage = 'Invalid email or password';
+        } else if (error.message?.includes('Email not confirmed')) {
+            errorMessage = 'Please confirm your email before logging in';
+        } else if (error.message?.includes('User already registered')) {
+            errorMessage = 'An account with this email already exists';
+        }
+        
+        showToast(errorMessage, 'error');
+    } finally {
+        // Re-enable button
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = isSignUpMode ? 'Sign Up' : 'Sign In';
+        }
+    }
+}
+
+// Setup favorites event listeners (called only once)
+function setupFavoritesEventListeners() {
     if (favoritesBtn) {
         favoritesBtn.addEventListener('click', () => {
             renderFavoritesModal();
@@ -278,20 +462,27 @@ function updateAuthUI(user) {
     currentUser = user;
     
     if (user) {
-        authBtn.classList.add('hidden');
-        userProfile.classList.remove('hidden');
+        if (authBtn) authBtn.classList.add('hidden');
+        if (userProfile) userProfile.classList.remove('hidden');
         if (favoritesBtn) favoritesBtn.classList.remove('hidden');
-        userName.textContent = user.user_metadata.full_name || user.email.split('@')[0];
-        userAvatar.src = user.user_metadata.avatar_url || `https://ui-avatars.com/api/?name=${userName.textContent}&background=random`;
+        
+        const displayName = user.user_metadata?.full_name || user.email?.split('@')[0] || 'User';
+        if (userName) userName.textContent = displayName;
+        if (userAvatar) {
+            userAvatar.src = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=random`;
+        }
         
         // Refresh likes and favorites
         Promise.all([fetchLikes(), fetchFavorites()]).then(() => {
             filterComponents(); // Re-render to update UI
+        }).catch(err => {
+            console.error('Error fetching user data:', err);
         });
-        authModal.classList.remove('active');
+        
+        if (authModal) authModal.classList.remove('active');
     } else {
-        authBtn.classList.remove('hidden');
-        userProfile.classList.add('hidden');
+        if (authBtn) authBtn.classList.remove('hidden');
+        if (userProfile) userProfile.classList.add('hidden');
         if (favoritesBtn) favoritesBtn.classList.add('hidden');
         userLikes.clear();
         userFavorites.clear();
@@ -305,34 +496,42 @@ function updateAuthUI(user) {
 async function fetchLikes() {
     if (!window.supabaseClient) return;
 
-    // Get all likes counts
-    const { data: counts, error: countError } = await window.supabaseClient
-        .from('likes')
-        .select('component_id');
-    
-    if (!countError && counts) {
-        likeCounts = {};
-        counts.forEach(like => {
-            likeCounts[like.component_id] = (likeCounts[like.component_id] || 0) + 1;
-        });
-    }
-
-    // Get user's likes if logged in
-    if (currentUser) {
-        const { data: userLikesData, error: userError } = await window.supabaseClient
+    try {
+        // Get all likes counts
+        const { data: counts, error: countError } = await window.supabaseClient
             .from('likes')
-            .select('component_id')
-            .eq('user_id', currentUser.id);
-            
-        if (!userError && userLikesData) {
-            userLikes = new Set(userLikesData.map(l => l.component_id));
+            .select('component_id');
+        
+        if (countError) {
+            console.error('Error fetching like counts:', countError);
+        } else if (counts) {
+            likeCounts = {};
+            counts.forEach(like => {
+                likeCounts[like.component_id] = (likeCounts[like.component_id] || 0) + 1;
+            });
         }
+
+        // Get user's likes if logged in
+        if (currentUser) {
+            const { data: userLikesData, error: userError } = await window.supabaseClient
+                .from('likes')
+                .select('component_id')
+                .eq('user_id', currentUser.id);
+                
+            if (userError) {
+                console.error('Error fetching user likes:', userError);
+            } else if (userLikesData) {
+                userLikes = new Set(userLikesData.map(l => l.component_id));
+            }
+        }
+    } catch (error) {
+        console.error('Exception fetching likes:', error);
     }
 }
 
 async function toggleLike(componentId, btnElement) {
     if (!currentUser) {
-        authModal.classList.add('active');
+        if (authModal) authModal.classList.add('active');
         return;
     }
 
@@ -342,25 +541,47 @@ async function toggleLike(componentId, btnElement) {
     let currentCount = parseInt(countSpan.textContent) || 0;
 
     // Optimistic UI Update
-    if (isLiked) {
-        userLikes.delete(componentId);
-        btnElement.classList.remove('liked');
-        icon.classList.replace('fas', 'far');
-        countSpan.textContent = Math.max(0, currentCount - 1);
-        
-        await window.supabaseClient
-            .from('likes')
-            .delete()
-            .match({ user_id: currentUser.id, component_id: componentId });
-    } else {
-        userLikes.add(componentId);
-        btnElement.classList.add('liked');
-        icon.classList.replace('far', 'fas');
-        countSpan.textContent = currentCount + 1;
+    try {
+        if (isLiked) {
+            userLikes.delete(componentId);
+            btnElement.classList.remove('liked');
+            icon.classList.replace('fas', 'far');
+            countSpan.textContent = Math.max(0, currentCount - 1);
+            
+            const { error } = await window.supabaseClient
+                .from('likes')
+                .delete()
+                .match({ user_id: currentUser.id, component_id: componentId });
+            
+            if (error) {
+                // Revert optimistic update on error
+                userLikes.add(componentId);
+                btnElement.classList.add('liked');
+                icon.classList.replace('far', 'fas');
+                countSpan.textContent = currentCount;
+                console.error('Error removing like:', error);
+            }
+        } else {
+            userLikes.add(componentId);
+            btnElement.classList.add('liked');
+            icon.classList.replace('far', 'fas');
+            countSpan.textContent = currentCount + 1;
 
-        await window.supabaseClient
-            .from('likes')
-            .insert({ user_id: currentUser.id, component_id: componentId });
+            const { error } = await window.supabaseClient
+                .from('likes')
+                .insert({ user_id: currentUser.id, component_id: componentId });
+            
+            if (error) {
+                // Revert optimistic update on error
+                userLikes.delete(componentId);
+                btnElement.classList.remove('liked');
+                icon.classList.replace('fas', 'far');
+                countSpan.textContent = currentCount;
+                console.error('Error adding like:', error);
+            }
+        }
+    } catch (error) {
+        console.error('Exception toggling like:', error);
     }
 }
 
@@ -369,14 +590,20 @@ async function toggleLike(componentId, btnElement) {
 async function fetchFavorites() {
     if (!window.supabaseClient || !currentUser) return;
 
-    const { data: favoritesData, error } = await window.supabaseClient
-        .from('favorites')
-        .select('component_id')
-        .eq('user_id', currentUser.id);
-        
-    if (!error && favoritesData) {
-        userFavorites = new Set(favoritesData.map(f => f.component_id));
-        updateFavoritesCount();
+    try {
+        const { data: favoritesData, error } = await window.supabaseClient
+            .from('favorites')
+            .select('component_id')
+            .eq('user_id', currentUser.id);
+            
+        if (error) {
+            console.error('Error fetching favorites:', error);
+        } else if (favoritesData) {
+            userFavorites = new Set(favoritesData.map(f => f.component_id));
+            updateFavoritesCount();
+        }
+    } catch (error) {
+        console.error('Exception fetching favorites:', error);
     }
 }
 
@@ -388,7 +615,7 @@ function updateFavoritesCount() {
 
 async function toggleFavorite(componentId, btnElement) {
     if (!currentUser) {
-        authModal.classList.add('active');
+        if (authModal) authModal.classList.add('active');
         return;
     }
 
@@ -396,28 +623,51 @@ async function toggleFavorite(componentId, btnElement) {
     const icon = btnElement.querySelector('i');
 
     // Optimistic UI Update
-    if (isSaved) {
-        userFavorites.delete(componentId);
-        btnElement.classList.remove('saved');
-        icon.classList.replace('fas', 'far');
-        showToast('Removed from saved');
-        
-        await window.supabaseClient
-            .from('favorites')
-            .delete()
-            .match({ user_id: currentUser.id, component_id: componentId });
-    } else {
-        userFavorites.add(componentId);
-        btnElement.classList.add('saved');
-        icon.classList.replace('far', 'fas');
-        showToast('Saved to collection!');
+    try {
+        if (isSaved) {
+            userFavorites.delete(componentId);
+            btnElement.classList.remove('saved');
+            icon.classList.replace('fas', 'far');
+            showToast('Removed from saved');
+            
+            const { error } = await window.supabaseClient
+                .from('favorites')
+                .delete()
+                .match({ user_id: currentUser.id, component_id: componentId });
+            
+            if (error) {
+                // Revert on error
+                userFavorites.add(componentId);
+                btnElement.classList.add('saved');
+                icon.classList.replace('far', 'fas');
+                console.error('Error removing favorite:', error);
+                showToast('Failed to remove from saved', 'error');
+            }
+        } else {
+            userFavorites.add(componentId);
+            btnElement.classList.add('saved');
+            icon.classList.replace('far', 'fas');
+            showToast('Saved to collection!');
 
-        await window.supabaseClient
-            .from('favorites')
-            .insert({ user_id: currentUser.id, component_id: componentId });
+            const { error } = await window.supabaseClient
+                .from('favorites')
+                .insert({ user_id: currentUser.id, component_id: componentId });
+            
+            if (error) {
+                // Revert on error
+                userFavorites.delete(componentId);
+                btnElement.classList.remove('saved');
+                icon.classList.replace('fas', 'far');
+                console.error('Error adding favorite:', error);
+                showToast('Failed to save component', 'error');
+            }
+        }
+        
+        updateFavoritesCount();
+    } catch (error) {
+        console.error('Exception toggling favorite:', error);
+        showToast('An error occurred', 'error');
     }
-    
-    updateFavoritesCount();
 }
 
 function renderFavoritesModal() {
