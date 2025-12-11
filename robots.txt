@@ -1,0 +1,63 @@
+# Robots.txt for Shades By Jay UI Library
+# https://shadesbyjay.site
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://shadesbyjay.site/sitemap.xml
+
+# Crawl-delay for polite crawling
+Crawl-delay: 1
+
+# Disallow admin area
+Disallow: /admin/
+
+# Allow all main pages
+Allow: /index.html
+Allow: /playground.html
+Allow: /submit.html
+Allow: /documentation.html
+Allow: /guidelines.html
+Allow: /changelog.html
+Allow: /privacy.html
+Allow: /terms.html
+Allow: /licensey.html
+
+# Allow assets for rich snippets
+Allow: /assets/
+Allow: /css/
+Allow: /js/
+
+# Block development files
+Disallow: /.git/
+Disallow: /.github/
+Disallow: /firebase.json
+Disallow: /*.sql$
+Disallow: /supabase_setup.sql
+
+# Google specific
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bing specific  
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Social media crawlers (for rich previews)
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
+User-agent: LinkedInBot
+Allow: /
+
+User-agent: Slackbot
+Allow: /
+
+User-agent: Discordbot
+Allow: /

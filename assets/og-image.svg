@@ -1,0 +1,87 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1a1a2e"/>
+      <stop offset="50%" style="stop-color:#16213e"/>
+      <stop offset="100%" style="stop-color:#0f0f23"/>
+    </linearGradient>
+    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#8b5cf6"/>
+      <stop offset="100%" style="stop-color:#a855f7"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Grid pattern -->
+  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(139, 92, 246, 0.1)" stroke-width="1"/>
+  </pattern>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  
+  <!-- Decorative circles -->
+  <circle cx="100" cy="100" r="200" fill="rgba(139, 92, 246, 0.1)"/>
+  <circle cx="1100" cy="530" r="150" fill="rgba(168, 85, 247, 0.1)"/>
+  
+  <!-- Logo cube icon -->
+  <g transform="translate(540, 150)">
+    <rect x="0" y="0" width="120" height="120" rx="24" fill="url(#accentGradient)" filter="url(#glow)"/>
+    <path d="M60 25 L95 45 L95 85 L60 105 L25 85 L25 45 Z" fill="none" stroke="white" stroke-width="3"/>
+    <path d="M60 25 L60 105" stroke="white" stroke-width="2"/>
+    <path d="M25 45 L95 85" stroke="white" stroke-width="2" opacity="0.5"/>
+    <path d="M95 45 L25 85" stroke="white" stroke-width="2" opacity="0.5"/>
+  </g>
+  
+  <!-- Main title -->
+  <text x="600" y="340" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="72" font-weight="800" fill="white">
+    Shades By Jay
+  </text>
+  
+  <!-- Subtitle -->
+  <text x="600" y="400" text-anchor="middle" font-family="Inter, system-ui, sans-serif" font-size="28" font-weight="500" fill="rgba(255,255,255,0.8)">
+    Open Source UI Library
+  </text>
+  
+  <!-- Stats bar -->
+  <g transform="translate(200, 460)">
+    <rect x="0" y="0" width="800" height="80" rx="16" fill="rgba(255,255,255,0.05)" stroke="rgba(139, 92, 246, 0.3)" stroke-width="2"/>
+    
+    <!-- Stat 1 -->
+    <text x="100" y="35" text-anchor="middle" font-family="Inter, sans-serif" font-size="28" font-weight="700" fill="#8b5cf6">250+</text>
+    <text x="100" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="rgba(255,255,255,0.6)">Components</text>
+    
+    <!-- Divider -->
+    <line x1="200" y1="15" x2="200" y2="65" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    
+    <!-- Stat 2 -->
+    <text x="300" y="35" text-anchor="middle" font-family="Inter, sans-serif" font-size="28" font-weight="700" fill="#8b5cf6">50+</text>
+    <text x="300" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="rgba(255,255,255,0.6)">Loaders</text>
+    
+    <!-- Divider -->
+    <line x1="400" y1="15" x2="400" y2="65" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    
+    <!-- Stat 3 -->
+    <text x="500" y="35" text-anchor="middle" font-family="Inter, sans-serif" font-size="28" font-weight="700" fill="#8b5cf6">Free</text>
+    <text x="500" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="rgba(255,255,255,0.6)">MIT License</text>
+    
+    <!-- Divider -->
+    <line x1="600" y1="15" x2="600" y2="65" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+    
+    <!-- Stat 4 -->
+    <text x="700" y="35" text-anchor="middle" font-family="Inter, sans-serif" font-size="28" font-weight="700" fill="#8b5cf6">Copy</text>
+    <text x="700" y="60" text-anchor="middle" font-family="Inter, sans-serif" font-size="14" fill="rgba(255,255,255,0.6)">HTML/CSS</text>
+  </g>
+  
+  <!-- URL -->
+  <text x="600" y="590" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" fill="rgba(255,255,255,0.5)">
+    shades-by-jay.web.app
+  </text>
+</svg>

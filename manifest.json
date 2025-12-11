@@ -1,0 +1,53 @@
+{
+    "name": "Shades By Jay - UI Library",
+    "short_name": "Shades By Jay",
+    "description": "A beautiful collection of 250+ free, open-source UI components. Copy HTML/CSS with one click.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0f0f23",
+    "theme_color": "#8b5cf6",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "assets/favicon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml",
+            "purpose": "any maskable"
+        }
+    ],
+    "categories": ["developer tools", "design", "utilities"],
+    "lang": "en-US",
+    "dir": "ltr",
+    "scope": "/",
+    "shortcuts": [
+        {
+            "name": "Browse Components",
+            "short_name": "Components",
+            "description": "Browse all UI components",
+            "url": "/?category=all",
+            "icons": [{"src": "assets/favicon.svg", "sizes": "96x96"}]
+        },
+        {
+            "name": "Playground",
+            "short_name": "Playground",
+            "description": "Open the code playground",
+            "url": "/playground.html",
+            "icons": [{"src": "assets/favicon.svg", "sizes": "96x96"}]
+        },
+        {
+            "name": "Submit Component",
+            "short_name": "Submit",
+            "description": "Submit your own component",
+            "url": "/submit.html",
+            "icons": [{"src": "assets/favicon.svg", "sizes": "96x96"}]
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "assets/og-image.svg",
+            "sizes": "1200x630",
+            "type": "image/svg+xml",
+            "label": "Shades By Jay Homepage"
+        }
+    ]
+}
