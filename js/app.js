@@ -507,7 +507,9 @@ async function fetchLikes() {
         } else if (counts) {
             likeCounts = {};
             counts.forEach(like => {
-                likeCounts[like.component_id] = (likeCounts[like.component_id] || 0) + 1;
+                // Normalize component_id to string for consistent comparison
+                const compId = String(like.component_id);
+                likeCounts[compId] = (likeCounts[compId] || 0) + 1;
             });
         }
 
@@ -521,7 +523,8 @@ async function fetchLikes() {
             if (userError) {
                 console.error('Error fetching user likes:', userError);
             } else if (userLikesData) {
-                userLikes = new Set(userLikesData.map(l => l.component_id));
+                // Normalize to strings for consistent Set operations
+                userLikes = new Set(userLikesData.map(l => String(l.component_id)));
             }
         }
     } catch (error) {
@@ -532,18 +535,26 @@ async function fetchLikes() {
 async function toggleLike(componentId, btnElement) {
     if (!currentUser) {
         if (authModal) authModal.classList.add('active');
+        showToast('Please sign in to like components', 'error');
         return;
     }
 
-    const isLiked = userLikes.has(componentId);
+    // Normalize componentId to string for consistent handling
+    const normalizedId = String(componentId);
+    const isLiked = userLikes.has(normalizedId);
     const icon = btnElement.querySelector('i');
     const countSpan = btnElement.querySelector('.like-count');
     let currentCount = parseInt(countSpan.textContent) || 0;
 
+    // Disable button during operation to prevent double-clicks
+    btnElement.disabled = true;
+    btnElement.style.opacity = '0.6';
+
     // Optimistic UI Update
     try {
         if (isLiked) {
-            userLikes.delete(componentId);
+            // Unlike
+            userLikes.delete(normalizedId);
             btnElement.classList.remove('liked');
             icon.classList.replace('fas', 'far');
             countSpan.textContent = Math.max(0, currentCount - 1);
@@ -551,37 +562,63 @@ async function toggleLike(componentId, btnElement) {
             const { error } = await window.supabaseClient
                 .from('likes')
                 .delete()
-                .match({ user_id: currentUser.id, component_id: componentId });
+                .eq('user_id', currentUser.id)
+                .eq('component_id', normalizedId);
             
             if (error) {
                 // Revert optimistic update on error
-                userLikes.add(componentId);
+                userLikes.add(normalizedId);
                 btnElement.classList.add('liked');
                 icon.classList.replace('far', 'fas');
                 countSpan.textContent = currentCount;
                 console.error('Error removing like:', error);
+                showToast('Failed to unlike: ' + error.message, 'error');
+            } else {
+                // Update local count cache
+                likeCounts[normalizedId] = Math.max(0, (likeCounts[normalizedId] || 1) - 1);
             }
         } else {
-            userLikes.add(componentId);
+            // Like
+            userLikes.add(normalizedId);
             btnElement.classList.add('liked');
             icon.classList.replace('far', 'fas');
             countSpan.textContent = currentCount + 1;
 
-            const { error } = await window.supabaseClient
+            const { data, error } = await window.supabaseClient
                 .from('likes')
-                .insert({ user_id: currentUser.id, component_id: componentId });
+                .insert({ user_id: currentUser.id, component_id: normalizedId })
+                .select();
             
             if (error) {
                 // Revert optimistic update on error
-                userLikes.delete(componentId);
+                userLikes.delete(normalizedId);
                 btnElement.classList.remove('liked');
                 icon.classList.replace('fas', 'far');
                 countSpan.textContent = currentCount;
                 console.error('Error adding like:', error);
+                
+                // Provide user-friendly error messages
+                let errorMsg = 'Failed to like';
+                if (error.code === '23505') {
+                    errorMsg = 'Already liked';
+                } else if (error.code === '42501') {
+                    errorMsg = 'Permission denied - please sign in again';
+                } else if (error.message) {
+                    errorMsg = error.message;
+                }
+                showToast(errorMsg, 'error');
+            } else {
+                // Update local count cache
+                likeCounts[normalizedId] = (likeCounts[normalizedId] || 0) + 1;
             }
         }
     } catch (error) {
         console.error('Exception toggling like:', error);
+        showToast('An error occurred. Please try again.', 'error');
+    } finally {
+        // Re-enable button
+        btnElement.disabled = false;
+        btnElement.style.opacity = '1';
     }
 }
 
@@ -599,7 +636,8 @@ async function fetchFavorites() {
         if (error) {
             console.error('Error fetching favorites:', error);
         } else if (favoritesData) {
-            userFavorites = new Set(favoritesData.map(f => f.component_id));
+            // Normalize to strings for consistent Set operations
+            userFavorites = new Set(favoritesData.map(f => String(f.component_id)));
             updateFavoritesCount();
         }
     } catch (error) {
@@ -616,64 +654,92 @@ function updateFavoritesCount() {
 async function toggleFavorite(componentId, btnElement) {
     if (!currentUser) {
         if (authModal) authModal.classList.add('active');
+        showToast('Please sign in to save components', 'error');
         return;
     }
 
-    const isSaved = userFavorites.has(componentId);
+    // Normalize componentId to string for consistent handling
+    const normalizedId = String(componentId);
+    const isSaved = userFavorites.has(normalizedId);
     const icon = btnElement.querySelector('i');
+
+    // Disable button during operation to prevent double-clicks
+    btnElement.disabled = true;
+    btnElement.style.opacity = '0.6';
 
     // Optimistic UI Update
     try {
         if (isSaved) {
-            userFavorites.delete(componentId);
+            // Unsave
+            userFavorites.delete(normalizedId);
             btnElement.classList.remove('saved');
             icon.classList.replace('fas', 'far');
-            showToast('Removed from saved');
             
             const { error } = await window.supabaseClient
                 .from('favorites')
                 .delete()
-                .match({ user_id: currentUser.id, component_id: componentId });
+                .eq('user_id', currentUser.id)
+                .eq('component_id', normalizedId);
             
             if (error) {
                 // Revert on error
-                userFavorites.add(componentId);
+                userFavorites.add(normalizedId);
                 btnElement.classList.add('saved');
                 icon.classList.replace('far', 'fas');
                 console.error('Error removing favorite:', error);
-                showToast('Failed to remove from saved', 'error');
+                showToast('Failed to remove from saved: ' + error.message, 'error');
+            } else {
+                showToast('Removed from saved');
             }
         } else {
-            userFavorites.add(componentId);
+            // Save
+            userFavorites.add(normalizedId);
             btnElement.classList.add('saved');
             icon.classList.replace('far', 'fas');
-            showToast('Saved to collection!');
 
-            const { error } = await window.supabaseClient
+            const { data, error } = await window.supabaseClient
                 .from('favorites')
-                .insert({ user_id: currentUser.id, component_id: componentId });
+                .insert({ user_id: currentUser.id, component_id: normalizedId })
+                .select();
             
             if (error) {
                 // Revert on error
-                userFavorites.delete(componentId);
+                userFavorites.delete(normalizedId);
                 btnElement.classList.remove('saved');
                 icon.classList.replace('fas', 'far');
                 console.error('Error adding favorite:', error);
-                showToast('Failed to save component', 'error');
+                
+                // Provide user-friendly error messages
+                let errorMsg = 'Failed to save';
+                if (error.code === '23505') {
+                    errorMsg = 'Already saved';
+                } else if (error.code === '42501') {
+                    errorMsg = 'Permission denied - please sign in again';
+                } else if (error.message) {
+                    errorMsg = error.message;
+                }
+                showToast(errorMsg, 'error');
+            } else {
+                showToast('Saved to collection!');
             }
         }
         
         updateFavoritesCount();
     } catch (error) {
         console.error('Exception toggling favorite:', error);
-        showToast('An error occurred', 'error');
+        showToast('An error occurred. Please try again.', 'error');
+    } finally {
+        // Re-enable button
+        btnElement.disabled = false;
+        btnElement.style.opacity = '1';
     }
 }
 
 function renderFavoritesModal() {
     if (!favoritesBody) return;
     
-    const favoriteComponents = allComponents.filter(c => userFavorites.has(c.id));
+    // Normalize comparison - userFavorites contains strings
+    const favoriteComponents = allComponents.filter(c => userFavorites.has(String(c.id)));
     
     if (favoriteComponents.length === 0) {
         favoritesBody.innerHTML = `
@@ -779,10 +845,11 @@ function createComponentCard(component) {
     
     previewContainer.appendChild(shadowHost);
 
-    // Info Container
-    const isLiked = userLikes.has(component.id);
-    const likeCount = likeCounts[component.id] || 0;
-    const isSaved = userFavorites.has(component.id);
+    // Info Container - Normalize ID to string for consistent comparison
+    const normalizedId = String(component.id);
+    const isLiked = userLikes.has(normalizedId);
+    const likeCount = likeCounts[normalizedId] || 0;
+    const isSaved = userFavorites.has(normalizedId);
 
     // Creator info
     const creatorName = component.creator_name || component.creatorName || 'Community';
