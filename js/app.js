@@ -197,8 +197,8 @@ async function initAuth() {
     // Set up event listeners (only once due to authInitialized guard)
     setupAuthEventListeners();
 
-    // Fetch initial likes data
-    await fetchLikes();
+    // Fetch initial likes data (global counts only - user likes are fetched in updateAuthUI after user is set)
+    await fetchLikeCounts();
 
     // Favorites Modal Event Listeners
     setupFavoritesEventListeners();
@@ -472,9 +472,12 @@ function updateAuthUI(user) {
             userAvatar.src = user.user_metadata?.avatar_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(displayName)}&background=random`;
         }
         
-        // Refresh likes and favorites
-        Promise.all([fetchLikes(), fetchFavorites()]).then(() => {
-            filterComponents(); // Re-render to update UI
+        // Fetch user-specific likes and favorites AFTER currentUser is set
+        // This ensures the queries use the correct user_id
+        Promise.all([fetchUserLikes(), fetchFavorites()]).then(() => {
+            console.log('User data loaded, re-rendering components...');
+            console.log('userLikes set contains:', Array.from(userLikes));
+            filterComponents(); // Re-render to update UI with user's like status
         }).catch(err => {
             console.error('Error fetching user data:', err);
         });
@@ -493,11 +496,11 @@ function updateAuthUI(user) {
 
 // ==================== LIKES LOGIC ====================
 
-async function fetchLikes() {
+// Fetch only global like counts (can be called without user being logged in)
+async function fetchLikeCounts() {
     if (!window.supabaseClient) return;
 
     try {
-        // Get all likes counts
         const { data: counts, error: countError } = await window.supabaseClient
             .from('likes')
             .select('component_id');
@@ -511,24 +514,48 @@ async function fetchLikes() {
                 const compId = String(like.component_id);
                 likeCounts[compId] = (likeCounts[compId] || 0) + 1;
             });
-        }
-
-        // Get user's likes if logged in
-        if (currentUser) {
-            const { data: userLikesData, error: userError } = await window.supabaseClient
-                .from('likes')
-                .select('component_id')
-                .eq('user_id', currentUser.id);
-                
-            if (userError) {
-                console.error('Error fetching user likes:', userError);
-            } else if (userLikesData) {
-                // Normalize to strings for consistent Set operations
-                userLikes = new Set(userLikesData.map(l => String(l.component_id)));
-            }
+            console.log('Loaded global like counts:', Object.keys(likeCounts).length, 'components with likes');
         }
     } catch (error) {
-        console.error('Exception fetching likes:', error);
+        console.error('Exception fetching like counts:', error);
+    }
+}
+
+// Fetch user's personal likes (must be called when user is logged in)
+async function fetchUserLikes() {
+    if (!window.supabaseClient || !currentUser) {
+        console.log('Cannot fetch user likes: no client or user');
+        return;
+    }
+
+    try {
+        console.log('Fetching likes for user:', currentUser.id);
+        
+        const { data: userLikesData, error: userError } = await window.supabaseClient
+            .from('likes')
+            .select('component_id')
+            .eq('user_id', currentUser.id);
+            
+        if (userError) {
+            console.error('Error fetching user likes:', userError);
+        } else if (userLikesData) {
+            // Normalize to strings for consistent Set operations
+            userLikes = new Set(userLikesData.map(l => String(l.component_id)));
+            console.log('User has liked', userLikes.size, 'components:', Array.from(userLikes));
+        } else {
+            userLikes = new Set();
+            console.log('User has no likes');
+        }
+    } catch (error) {
+        console.error('Exception fetching user likes:', error);
+    }
+}
+
+// Combined function that fetches both (for convenience)
+async function fetchLikes() {
+    await fetchLikeCounts();
+    if (currentUser) {
+        await fetchUserLikes();
     }
 }
 
