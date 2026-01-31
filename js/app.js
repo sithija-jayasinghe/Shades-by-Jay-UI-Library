@@ -1002,8 +1002,13 @@ function filterComponents() {
 
 // Open Modal
 function openModal(component) {
+    if (!modal) {
+        console.error('Modal element not found');
+        return;
+    }
+
     currentComponent = component;
-    modalTitle.textContent = component.name;
+    if (modalTitle) modalTitle.textContent = component.name;
     
     // Get the preview content container (inside resizable)
     const previewContent = document.getElementById('previewContent');
@@ -1040,8 +1045,8 @@ function openModal(component) {
     previewContent.appendChild(shadowHost);
     
     // Set code content
-    htmlContent.textContent = formatCode(component.html);
-    cssContent.textContent = formatCode(component.css);
+    if (htmlContent) htmlContent.textContent = formatCode(component.html);
+    if (cssContent) cssContent.textContent = formatCode(component.css);
     
     // Initialize Playground with original code
     if (typeof setPlaygroundOriginalCode === 'function') {
@@ -1049,10 +1054,17 @@ function openModal(component) {
     }
     
     // Reset to HTML tab
-    codeTabs.forEach(tab => tab.classList.remove('active'));
-    codeBlocks.forEach(block => block.classList.remove('active'));
-    codeTabs[0].classList.add('active');
-    document.getElementById('htmlCode').classList.add('active');
+    if (codeTabs && codeTabs.length > 0) {
+        codeTabs.forEach(tab => tab.classList.remove('active'));
+        codeTabs[0].classList.add('active');
+    }
+    
+    if (codeBlocks) {
+        codeBlocks.forEach(block => block.classList.remove('active'));
+    }
+    
+    const htmlCodeEl = document.getElementById('htmlCode');
+    if (htmlCodeEl) htmlCodeEl.classList.add('active');
     
     // Show modal
     modal.classList.add('active');
