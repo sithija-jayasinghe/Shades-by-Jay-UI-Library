@@ -796,6 +796,12 @@ button {
     transform: translateX(-50%) translateY(0);
 }
 
+.toast.error {
+    color: var(--error);
+    border-color: var(--error);
+    box-shadow: var(--shadow-lg), 0 0 30px rgba(239, 68, 68, 0.2);
+}
+
 .toast i {
     font-size: 1.25rem;
 }

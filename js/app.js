@@ -65,47 +65,55 @@ let showingFavorites = false; // Whether we're showing the favorites view
 
 // Initialize
 document.addEventListener('DOMContentLoaded', async () => {
-    // Initialize Auth
-    await initAuth();
-
-    // Load static components first
-    renderComponents(allComponents);
-    
-    // Try to load dynamic components from Supabase
-    if (window.supabaseClient) {
-        try {
-            const { data, error } = await window.supabaseClient
-                .from('components')
-                .select('*')
-                .eq('status', 'approved');
-                
-            if (data && !error) {
-                // Add dynamic components to the list
-                const dynamicComponents = data.map(comp => ({
-                    id: comp.id, // UUID from DB
-                    name: comp.name,
-                    category: comp.category,
-                    tags: comp.tags || [],
-                    html: comp.html,
-                    css: comp.css
-                }));
-                
-                allComponents.push(...dynamicComponents);
-                // Re-render with new data
-                filterComponents(); 
-            }
-        } catch (e) {
-            console.log('Supabase not connected or empty');
-        }
-    }
-
-    updateStats(); // Update stats after loading everything
-    initializeEventListeners();
+    // 1. Setup UI immediately
     loadTheme();
+    initializeEventListeners();
+    
+    // 2. Render static content first (Fast LCP)
+    renderComponents(allComponents);
+    updateStats();
+
+    // 3. Initialize Auth & Dynamic Content in parallel
+    const authPromise = initAuth();
+    
+    // Load dynamic components
+    const contentPromise = (async () => {
+        if (window.supabaseClient) {
+            try {
+                const { data, error } = await window.supabaseClient
+                    .from('components')
+                    .select('*')
+                    .eq('status', 'approved');
+                    
+                if (data && !error) {
+                    // Add dynamic components to the list
+                    const dynamicComponents = data.map(comp => ({
+                        id: comp.id, // UUID from DB
+                        name: comp.name,
+                        category: comp.category,
+                        tags: comp.tags || [],
+                        html: comp.html,
+                        css: comp.css
+                    }));
+                    
+                    allComponents.push(...dynamicComponents);
+                    // Re-render with new data
+                    filterComponents(); 
+                    updateStats();
+                }
+            } catch (e) {
+                console.log('Supabase not connected or empty');
+            }
+        }
+    })();
+    
+    await Promise.all([authPromise, contentPromise]);
 });
 
 // Render Components Grid
 function renderComponents(components) {
+    if (!componentsGrid) return;
+    
     componentsGrid.innerHTML = '';
     
     if (components.length === 0) {
@@ -1090,12 +1098,32 @@ async function copyToClipboard(type) {
 }
 
 // Show Toast Notification
-function showToast(message) {
-    toast.querySelector('span').textContent = message;
+function showToast(message, type = 'success') {
+    if (!toast) return;
+    
+    const span = toast.querySelector('span');
+    const icon = toast.querySelector('i');
+    
+    if (span) span.textContent = message;
+    
+    // Handle specific types
+    if (type === 'error') {
+        toast.classList.add('error');
+        if (icon) icon.className = 'fas fa-exclamation-circle';
+    } else {
+        toast.classList.remove('error');
+        if (icon) icon.className = 'fas fa-check-circle';
+    }
+    
     toast.classList.add('show');
     
     setTimeout(() => {
         toast.classList.remove('show');
+        // Reset state after animation
+        setTimeout(() => {
+            toast.classList.remove('error');
+            if (icon) icon.className = 'fas fa-check-circle';
+        }, 300);
     }, 2500);
 }
 
@@ -1130,7 +1158,9 @@ function capitalizeFirst(str) {
 // Initialize Event Listeners
 function initializeEventListeners() {
     // Search
-    searchInput.addEventListener('input', debounce(filterComponents, 300));
+    if (searchInput) {
+        searchInput.addEventListener('input', debounce(filterComponents, 300));
+    }
     
     // Category Navigation
     navLinks.forEach(link => {
@@ -1157,20 +1187,27 @@ function initializeEventListeners() {
     });
     
     // Theme Toggle
-    themeToggle.addEventListener('click', toggleTheme);
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
     
     // Modal Close
-    modalClose.addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) closeModal();
-    });
+    if (modalClose) {
+        modalClose.addEventListener('click', closeModal);
+    }
     
-    // Escape key to close modal
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+        
+        // Escape key to close modal
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    }
     
     // Code Tabs
     codeTabs.forEach(tab => {
