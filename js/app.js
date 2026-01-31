@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initializeEventListeners();
     
     // 2. Render static content first (Fast LCP)
-    renderComponents(allComponents);
+    filterComponents();
     updateStats();
 
     // 3. Initialize Auth & Dynamic Content in parallel
@@ -984,7 +984,7 @@ function openInCodePen(component) {
 // Inject Component Styles (scoped)
 // Filter Components
 function filterComponents() {
-    const searchTerm = searchInput.value.toLowerCase().trim();
+    const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
     
     let filtered = allComponents.filter(component => {
         const matchesCategory = currentCategory === 'all' || component.category === currentCategory;
