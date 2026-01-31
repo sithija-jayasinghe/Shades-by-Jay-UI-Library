@@ -60,7 +60,26 @@
     function loadFromURL() {
         const params = new URLSearchParams(window.location.search);
         
-        // Check for encoded data
+        // Check for transfer data from main site (localStorage)
+        if (params.get('source') === 'transfer') {
+            const transferData = localStorage.getItem('shades_playground_transfer');
+            if (transferData) {
+                try {
+                    const data = JSON.parse(transferData);
+                    if (data.html) elements.htmlEditor.value = data.html;
+                    if (data.css) elements.cssEditor.value = data.css;
+                    if (data.name && elements.componentName) elements.componentName.value = data.name;
+                    
+                    // Clear transfer data after loading
+                    localStorage.removeItem('shades_playground_transfer');
+                    return; // Stop early
+                } catch (e) {
+                    console.error('Failed to parse transfer data:', e);
+                }
+            }
+        }
+
+        // Check for encoded data (Legacy support)
         const htmlParam = params.get('html');
         const cssParam = params.get('css');
         const name = params.get('name');

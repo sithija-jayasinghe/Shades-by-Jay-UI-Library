@@ -96,13 +96,18 @@ function openInPlaygroundPage(e) {
     const html = originalHtml || '';
     const css = originalCss || '';
     
-    // Encode the data for URL
-    const encodedHtml = btoa(encodeURIComponent(html));
-    const encodedCss = btoa(encodeURIComponent(css));
-    const encodedName = encodeURIComponent(componentName);
+    // Save data to localStorage for transfer (avoids URL length limits)
+    const playgroundData = {
+        name: componentName,
+        html: html,
+        css: css,
+        timestamp: Date.now()
+    };
     
-    // Open playground page with data
-    const url = `playground.html?name=${encodedName}&html=${encodedHtml}&css=${encodedCss}`;
+    localStorage.setItem('shades_playground_transfer', JSON.stringify(playgroundData));
+    
+    // Open playground page with source flag
+    const url = `playground.html?source=transfer`;
     window.open(url, '_blank');
 }
 
